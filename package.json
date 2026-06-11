@@ -1,0 +1,26 @@
+{
+  "name": "eco-mind",
+  "version": "1.0.0",
+  "description": "> Track, understand, and reduce your carbon footprint using your real digital data.",
+  "main": "config.example.js",
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhigyanedu/Climate-Intelligence.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/abhigyanedu/Climate-Intelligence/issues"
+  },
+  "homepage": "https://github.com/abhigyanedu/Climate-Intelligence#readme",
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "jest-environment-jsdom": "^30.4.1"
+  }
+}
