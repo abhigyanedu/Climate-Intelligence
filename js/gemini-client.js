@@ -39,7 +39,7 @@ const GeminiClient = (() => {
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
           const errMsg = err?.error?.message || "Unknown";
-          
+
           if (res.status === 400) {
             throw new Error(`Invalid API Key or Bad Request: ${errMsg}`);
           }
@@ -49,7 +49,7 @@ const GeminiClient = (() => {
               attempt++;
               const waitMs = Math.pow(2, attempt) * 1000;
               console.warn(`[Gemini] Rate limited. Retrying in ${waitMs}ms...`);
-              await new Promise(r => setTimeout(r, waitMs));
+              await new Promise((r) => setTimeout(r, waitMs));
               continue;
             }
             throw new Error(`Quota Exceeded: ${errMsg}`);
@@ -60,12 +60,12 @@ const GeminiClient = (() => {
         const data = await res.json();
         return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
       } catch (err) {
-        if (err.message.includes('Quota') || err.message.includes('Invalid')) {
+        if (err.message.includes("Quota") || err.message.includes("Invalid")) {
           throw err; // don't retry hard errors
         }
         if (attempt >= retries - 1) throw err;
         attempt++;
-        await new Promise(r => setTimeout(r, 1000 * attempt));
+        await new Promise((r) => setTimeout(r, 1000 * attempt));
       }
     }
   }
@@ -190,7 +190,7 @@ If a field is not visible, use null. For kWh, look for "Units Consumed", "Total 
     }
 
     const { summary, lastWeek, topCategory, userName } = data;
-    const delta = lastWeek ? ((summary.total - lastWeek) / lastWeek * 100).toFixed(1) : null;
+    const delta = lastWeek ? (((summary.total - lastWeek) / lastWeek) * 100).toFixed(1) : null;
 
     const prompt = `You are EcoMind, a friendly and encouraging carbon footprint advisor. 
     
@@ -286,11 +286,16 @@ If high electricity, suggest AC temperature changes. Keep it practical for India
   function _demoInsight(data) {
     const category = data.topCategory || "food delivery";
     const tips = {
-      food_delivery: "Your food delivery orders are your top carbon source this week — try cooking at home 3 days instead of ordering to cut ~4 kg CO₂. Switching even one order to a vegetarian meal can make a big difference. You're already tracking — that awareness puts you ahead of 90% of people!",
-      transport_cab: "Cab rides are your biggest carbon contributor this week at over 8 kg CO₂. Try taking the metro for your regular commute — it cuts emissions by 78% per trip. Small shifts add up fast, and you're on the right track by monitoring your footprint!",
-      electricity: "Your home electricity usage is the biggest slice of your carbon footprint this week. Setting your AC to 24°C instead of 20°C can reduce cooling energy by 24% — that's roughly 15 kg CO₂ saved per month. You've taken the hardest step by measuring — now let's reduce!",
-      flight: "Your flight this week contributed the most to your footprint — flights are carbon-intensive but unavoidable sometimes. Consider offsetting through a verified program, and choose economy class when possible (it's 3× lower impact than business). Every other category you optimize now makes a real difference!",
-      ecommerce: "Online shopping deliveries drove most of your carbon this week. Consolidating orders into weekly batches instead of daily can cut delivery emissions by up to 30%. You're tracking what matters — that's the foundation of real change!",
+      food_delivery:
+        "Your food delivery orders are your top carbon source this week — try cooking at home 3 days instead of ordering to cut ~4 kg CO₂. Switching even one order to a vegetarian meal can make a big difference. You're already tracking — that awareness puts you ahead of 90% of people!",
+      transport_cab:
+        "Cab rides are your biggest carbon contributor this week at over 8 kg CO₂. Try taking the metro for your regular commute — it cuts emissions by 78% per trip. Small shifts add up fast, and you're on the right track by monitoring your footprint!",
+      electricity:
+        "Your home electricity usage is the biggest slice of your carbon footprint this week. Setting your AC to 24°C instead of 20°C can reduce cooling energy by 24% — that's roughly 15 kg CO₂ saved per month. You've taken the hardest step by measuring — now let's reduce!",
+      flight:
+        "Your flight this week contributed the most to your footprint — flights are carbon-intensive but unavoidable sometimes. Consider offsetting through a verified program, and choose economy class when possible (it's 3× lower impact than business). Every other category you optimize now makes a real difference!",
+      ecommerce:
+        "Online shopping deliveries drove most of your carbon this week. Consolidating orders into weekly batches instead of daily can cut delivery emissions by up to 30%. You're tracking what matters — that's the foundation of real change!",
     };
     return tips[category] || tips.food_delivery;
   }

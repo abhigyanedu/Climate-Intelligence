@@ -8,32 +8,32 @@ const Charts = (() => {
   const instances = {};
 
   const CATEGORY_COLORS = {
-    transport:       "#2B7A5F",
-    transport_cab:   "#3C8F73",
+    transport: "#2B7A5F",
+    transport_cab: "#3C8F73",
     transport_train: "#51A388",
-    food_delivery:   "#E6A08A",
-    quick_commerce:  "#D97B6A",
-    ecommerce:       "#8AA298",
-    electricity:     "#D4A373",
-    flight:          "#B56576",
-    accommodation:   "#6D6875",
-    digital:         "#A8D0E6",
-    manual:          "#A3B1AA",
-    travel:          "#A8D0E6",
+    food_delivery: "#E6A08A",
+    quick_commerce: "#D97B6A",
+    ecommerce: "#8AA298",
+    electricity: "#D4A373",
+    flight: "#B56576",
+    accommodation: "#6D6875",
+    digital: "#A8D0E6",
+    manual: "#A3B1AA",
+    travel: "#A8D0E6",
   };
 
   const CATEGORY_LABELS = {
-    transport_cab:   "Cab / Ride",
+    transport_cab: "Cab / Ride",
     transport_train: "Train",
-    food_delivery:   "Food Delivery",
-    quick_commerce:  "Quick Commerce",
-    ecommerce:       "Shopping",
-    electricity:     "Electricity",
-    flight:          "Flights",
-    accommodation:   "Hotels",
-    digital:         "Digital",
-    manual:          "Other",
-    travel:          "Travel",
+    food_delivery: "Food Delivery",
+    quick_commerce: "Quick Commerce",
+    ecommerce: "Shopping",
+    electricity: "Electricity",
+    flight: "Flights",
+    accommodation: "Hotels",
+    digital: "Digital",
+    manual: "Other",
+    travel: "Travel",
   };
 
   function _destroy(id) {
@@ -59,12 +59,14 @@ const Charts = (() => {
     instances[canvasId] = new Chart(ctx, {
       type: "doughnut",
       data: {
-        datasets: [{
-          data: [pct, 1 - pct],
-          backgroundColor: [color, "rgba(26, 54, 45, 0.05)"],
-          borderWidth: 0,
-          hoverOffset: 0,
-        }],
+        datasets: [
+          {
+            data: [pct, 1 - pct],
+            backgroundColor: [color, "rgba(26, 54, 45, 0.05)"],
+            borderWidth: 0,
+            hoverOffset: 0,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -93,19 +95,19 @@ const Charts = (() => {
       type: "bar",
       data: {
         labels,
-        datasets: [{
-          label: "kg CO₂",
-          data: values,
-          backgroundColor: data.map((d) =>
-            d.date === today ? "#2B7A5F" : "rgba(43, 122, 95, 0.3)"
-          ),
-          borderColor: data.map((d) =>
-            d.date === today ? "#2B7A5F" : "rgba(43, 122, 95, 0.5)"
-          ),
-          borderWidth: 1,
-          borderRadius: 6,
-          borderSkipped: false,
-        }],
+        datasets: [
+          {
+            label: "kg CO₂",
+            data: values,
+            backgroundColor: data.map((d) =>
+              d.date === today ? "#2B7A5F" : "rgba(43, 122, 95, 0.3)"
+            ),
+            borderColor: data.map((d) => (d.date === today ? "#2B7A5F" : "rgba(43, 122, 95, 0.5)")),
+            borderWidth: 1,
+            borderRadius: 6,
+            borderSkipped: false,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -155,13 +157,15 @@ const Charts = (() => {
       type: "doughnut",
       data: {
         labels: entries.map(([k]) => CATEGORY_LABELS[k] || k),
-        datasets: [{
-          data: entries.map(([, v]) => parseFloat(v.toFixed(2))),
-          backgroundColor: entries.map(([k]) => CATEGORY_COLORS[k] || "#A3B1AA"),
-          borderColor: "#FFFFFF",
-          borderWidth: 2,
-          hoverOffset: 8,
-        }],
+        datasets: [
+          {
+            data: entries.map(([, v]) => parseFloat(v.toFixed(2))),
+            backgroundColor: entries.map(([k]) => CATEGORY_COLORS[k] || "#A3B1AA"),
+            borderColor: "#FFFFFF",
+            borderWidth: 2,
+            hoverOffset: 8,
+          },
+        ],
       },
       options: {
         responsive: true,
@@ -180,7 +184,8 @@ const Charts = (() => {
             borderColor: "rgba(26,54,45,0.1)",
             borderWidth: 1,
             callbacks: {
-              label: (ctx) => ` ${ctx.parsed.toFixed(2)} kg CO₂e (${((ctx.parsed / ctx.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(1)}%)`,
+              label: (ctx) =>
+                ` ${ctx.parsed.toFixed(2)} kg CO₂e (${((ctx.parsed / ctx.dataset.data.reduce((a, b) => a + b, 0)) * 100).toFixed(1)}%)`,
             },
           },
         },
@@ -206,18 +211,20 @@ const Charts = (() => {
       type: "bar",
       data: {
         labels: displayed.map((m) => `${m.icon} ${m.label}`),
-        datasets: [{
-          label: "kg CO₂e",
-          data: displayed.map((m) => m.co2),
-          backgroundColor: displayed.map((m) =>
-            m.mode === selectedMode ? "#2B7A5F" : "rgba(43, 122, 95, 0.2)"
-          ),
-          borderColor: displayed.map((m) =>
-            m.mode === selectedMode ? "#2B7A5F" : "rgba(43, 122, 95, 0.4)"
-          ),
-          borderWidth: 1,
-          borderRadius: 4,
-        }],
+        datasets: [
+          {
+            label: "kg CO₂e",
+            data: displayed.map((m) => m.co2),
+            backgroundColor: displayed.map((m) =>
+              m.mode === selectedMode ? "#2B7A5F" : "rgba(43, 122, 95, 0.2)"
+            ),
+            borderColor: displayed.map((m) =>
+              m.mode === selectedMode ? "#2B7A5F" : "rgba(43, 122, 95, 0.4)"
+            ),
+            borderWidth: 1,
+            borderRadius: 4,
+          },
+        ],
       },
       options: {
         indexAxis: "y",
@@ -248,7 +255,14 @@ const Charts = (() => {
     });
   }
 
-  return { drawScoreRing, drawWeeklyChart, drawCategoryChart, drawRouteChart, CATEGORY_COLORS, CATEGORY_LABELS };
+  return {
+    drawScoreRing,
+    drawWeeklyChart,
+    drawCategoryChart,
+    drawRouteChart,
+    CATEGORY_COLORS,
+    CATEGORY_LABELS,
+  };
 })();
 
 window.Charts = Charts;

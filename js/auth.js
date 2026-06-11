@@ -41,7 +41,7 @@ const Auth = (() => {
   function _initTokenClient(cfg) {
     if (_tokenClient) return true;
     if (!window.google?.accounts?.oauth2) return false;
-    
+
     _tokenClient = window.google.accounts.oauth2.initTokenClient({
       client_id: cfg.GOOGLE_CLIENT_ID,
       scope: SCOPES,
@@ -128,10 +128,9 @@ const Auth = (() => {
 
   async function _fetchUserProfile() {
     try {
-      const res = await fetch(
-        "https://www.googleapis.com/oauth2/v2/userinfo",
-        { headers: { Authorization: `Bearer ${_accessToken}` } }
-      );
+      const res = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+        headers: { Authorization: `Bearer ${_accessToken}` },
+      });
       _userProfile = await res.json();
       console.info("[Auth] Signed in as:", _userProfile.email);
     } catch (e) {

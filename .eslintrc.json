@@ -1,0 +1,28 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": ["eslint:recommended", "prettier"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "no-console": ["warn", { "allow": ["warn", "error", "info"] }]
+  },
+  "globals": {
+    "CarbonEngine": "readonly",
+    "Storage": "readonly",
+    "Auth": "readonly",
+    "GmailParser": "readonly",
+    "GeminiClient": "readonly",
+    "Charts": "readonly",
+    "lucide": "readonly",
+    "initializeApp": "readonly",
+    "getAnalytics": "readonly",
+    "logEvent": "readonly"
+  }
+}

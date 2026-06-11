@@ -13,15 +13,15 @@ const GmailParser = (() => {
 
   // Categories with their default carbon estimates for India
   const CATEGORY_DEFAULTS = {
-    food_delivery:   { co2: 5.5,  label: "Food Delivery",   icon: "🍔", color: "#ff6b6b" },
-    quick_commerce:  { co2: 3.8,  label: "Quick Commerce",  icon: "⚡", color: "#ff9f40" },
-    ecommerce:       { co2: 7.5,  label: "Online Shopping",  icon: "📦", color: "#a855f7" },
-    transport_cab:   { co2: 3.2,  label: "Cab Ride",        icon: "🚕", color: "#3b82f6" },
-    transport_train: { co2: 0.8,  label: "Train Journey",   icon: "🚂", color: "#22c55e" },
-    flight:          { co2: 180,  label: "Flight",          icon: "✈️", color: "#ef4444" },
-    accommodation:   { co2: 15,   label: "Hotel Stay",      icon: "🏨", color: "#8b5cf6" },
-    electricity:     { co2: null, label: "Electricity Bill", icon: "💡", color: "#f59e0b" },
-    travel:          { co2: null, label: "Travel Booking",  icon: "🗺️", color: "#06b6d4" },
+    food_delivery: { co2: 5.5, label: "Food Delivery", icon: "🍔", color: "#ff6b6b" },
+    quick_commerce: { co2: 3.8, label: "Quick Commerce", icon: "⚡", color: "#ff9f40" },
+    ecommerce: { co2: 7.5, label: "Online Shopping", icon: "📦", color: "#a855f7" },
+    transport_cab: { co2: 3.2, label: "Cab Ride", icon: "🚕", color: "#3b82f6" },
+    transport_train: { co2: 0.8, label: "Train Journey", icon: "🚂", color: "#22c55e" },
+    flight: { co2: 180, label: "Flight", icon: "✈️", color: "#ef4444" },
+    accommodation: { co2: 15, label: "Hotel Stay", icon: "🏨", color: "#8b5cf6" },
+    electricity: { co2: null, label: "Electricity Bill", icon: "💡", color: "#f59e0b" },
+    travel: { co2: null, label: "Travel Booking", icon: "🗺️", color: "#06b6d4" },
   };
 
   /**
@@ -88,15 +88,47 @@ const GmailParser = (() => {
   function _buildSearchQuery(includeGlobal) {
     // India senders
     const indiaSenders = [
-      "zomato.com", "swiggy.in", "blinkit.com", "zeptonow.com", "dunzo.in",
-      "bigbasket.com", "amazon.in", "flipkart.com", "myntra.com", "meesho.com",
-      "ajio.com", "olacabs.com", "uber.com", "rapido.bike",
-      "goindigo.in", "airindia.in", "spicejet.com", "akasaair.com", "airvistara.com",
-      "irctc.co.in", "makemytrip.com", "goibibo.com", "oyorooms.com",
-      "bescom.org", "tatapower.com", "bsesdelhi.com", "mahadiscom.in",
+      "zomato.com",
+      "swiggy.in",
+      "blinkit.com",
+      "zeptonow.com",
+      "dunzo.in",
+      "bigbasket.com",
+      "amazon.in",
+      "flipkart.com",
+      "myntra.com",
+      "meesho.com",
+      "ajio.com",
+      "olacabs.com",
+      "uber.com",
+      "rapido.bike",
+      "goindigo.in",
+      "airindia.in",
+      "spicejet.com",
+      "akasaair.com",
+      "airvistara.com",
+      "irctc.co.in",
+      "makemytrip.com",
+      "goibibo.com",
+      "oyorooms.com",
+      "bescom.org",
+      "tatapower.com",
+      "bsesdelhi.com",
+      "mahadiscom.in",
     ];
     const globalSenders = includeGlobal
-      ? ["doordash.com", "instacart.com", "amazon.com", "ebay.com", "delta.com", "united.com", "aa.com", "emirates.com", "grab.com", "gojek.com"]
+      ? [
+          "doordash.com",
+          "instacart.com",
+          "amazon.com",
+          "ebay.com",
+          "delta.com",
+          "united.com",
+          "aa.com",
+          "emirates.com",
+          "grab.com",
+          "gojek.com",
+        ]
       : [];
 
     const allSenders = [...indiaSenders, ...globalSenders];
@@ -130,9 +162,14 @@ const GmailParser = (() => {
     for (let i = 0; i < ids.length; i += batchSize) {
       const batch = ids.slice(i, i + batchSize);
       const fetches = batch.map((id) =>
-        fetch(`${GMAIL_API}/users/me/messages/${id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }).then((r) => r.json()).catch(() => null)
+        fetch(
+          `${GMAIL_API}/users/me/messages/${id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
+          .then((r) => r.json())
+          .catch(() => null)
       );
       const done = await Promise.all(fetches);
       results.push(...done.filter(Boolean));
@@ -141,9 +178,7 @@ const GmailParser = (() => {
   }
 
   function _getHeader(msg, name) {
-    return msg.payload?.headers?.find(
-      (h) => h.name.toLowerCase() === name.toLowerCase()
-    )?.value;
+    return msg.payload?.headers?.find((h) => h.name.toLowerCase() === name.toLowerCase())?.value;
   }
 
   function _parseDate(dateStr) {
@@ -181,20 +216,160 @@ const GmailParser = (() => {
     };
 
     return [
-      { id: "d1", platform: "Zomato", category: "food_delivery", categoryLabel: "Food Delivery", categoryIcon: "🍔", subject: "Your Zomato order from Punjabi Dhaba is on the way!", date: d(0), estimatedCo2: 5.5, needsReview: false },
-      { id: "d2", platform: "Swiggy", category: "food_delivery", categoryLabel: "Food Delivery", categoryIcon: "🍔", subject: "Your Swiggy order is confirmed", date: d(1), estimatedCo2: 5.5, needsReview: false },
-      { id: "d3", platform: "Blinkit", category: "quick_commerce", categoryLabel: "Quick Commerce", categoryIcon: "⚡", subject: "Your Blinkit order is out for delivery!", date: d(1), estimatedCo2: 3.8, needsReview: false },
-      { id: "d4", platform: "Uber", category: "transport_cab", categoryLabel: "Cab Ride", categoryIcon: "🚕", subject: "Your Uber receipt from Thursday", date: d(2), estimatedCo2: 3.2, needsReview: false },
-      { id: "d5", platform: "Amazon.in", category: "ecommerce", categoryLabel: "Online Shopping", categoryIcon: "📦", subject: "Your Amazon.in order has been shipped", date: d(2), estimatedCo2: 7.5, needsReview: false },
-      { id: "d6", platform: "Zepto", category: "quick_commerce", categoryLabel: "Quick Commerce", categoryIcon: "⚡", subject: "Zepto: Order delivered in 9 minutes!", date: d(3), estimatedCo2: 3.8, needsReview: false },
-      { id: "d7", platform: "IndiGo", category: "flight", categoryLabel: "Flight", categoryIcon: "✈️", subject: "E-ticket for your IndiGo flight DEL→BOM", date: d(4), estimatedCo2: 180, needsReview: true },
-      { id: "d8", platform: "Ola", category: "transport_cab", categoryLabel: "Cab Ride", categoryIcon: "🚕", subject: "Thanks for riding with Ola!", date: d(4), estimatedCo2: 3.2, needsReview: false },
-      { id: "d9", platform: "Flipkart", category: "ecommerce", categoryLabel: "Online Shopping", categoryIcon: "📦", subject: "Flipkart: Your order #FL-28394 has shipped", date: d(5), estimatedCo2: 7.5, needsReview: false },
-      { id: "d10", platform: "Swiggy", category: "food_delivery", categoryLabel: "Food Delivery", categoryIcon: "🍔", subject: "Your Swiggy Instamart order is delivered", date: d(5), estimatedCo2: 5.5, needsReview: false },
-      { id: "d11", platform: "BESCOM", category: "electricity", categoryLabel: "Electricity Bill", categoryIcon: "💡", subject: "BESCOM: Your November electricity bill is ready", date: d(6), estimatedCo2: null, needsReview: true },
-      { id: "d12", platform: "MakeMyTrip", category: "travel", categoryLabel: "Travel Booking", categoryIcon: "🗺️", subject: "Your hotel booking at Goa is confirmed!", date: d(6), estimatedCo2: 15, needsReview: false },
-      { id: "d13", platform: "Zomato", category: "food_delivery", categoryLabel: "Food Delivery", categoryIcon: "🍔", subject: "Zomato: Your order from Burger King is confirmed", date: d(7), estimatedCo2: 5.5, needsReview: false },
-      { id: "d14", platform: "IRCTC", category: "transport_train", categoryLabel: "Train Journey", categoryIcon: "🚂", subject: "E-ticket for your IRCTC booking PNR: 1234567890", date: d(7), estimatedCo2: 0.8, needsReview: false },
+      {
+        id: "d1",
+        platform: "Zomato",
+        category: "food_delivery",
+        categoryLabel: "Food Delivery",
+        categoryIcon: "🍔",
+        subject: "Your Zomato order from Punjabi Dhaba is on the way!",
+        date: d(0),
+        estimatedCo2: 5.5,
+        needsReview: false,
+      },
+      {
+        id: "d2",
+        platform: "Swiggy",
+        category: "food_delivery",
+        categoryLabel: "Food Delivery",
+        categoryIcon: "🍔",
+        subject: "Your Swiggy order is confirmed",
+        date: d(1),
+        estimatedCo2: 5.5,
+        needsReview: false,
+      },
+      {
+        id: "d3",
+        platform: "Blinkit",
+        category: "quick_commerce",
+        categoryLabel: "Quick Commerce",
+        categoryIcon: "⚡",
+        subject: "Your Blinkit order is out for delivery!",
+        date: d(1),
+        estimatedCo2: 3.8,
+        needsReview: false,
+      },
+      {
+        id: "d4",
+        platform: "Uber",
+        category: "transport_cab",
+        categoryLabel: "Cab Ride",
+        categoryIcon: "🚕",
+        subject: "Your Uber receipt from Thursday",
+        date: d(2),
+        estimatedCo2: 3.2,
+        needsReview: false,
+      },
+      {
+        id: "d5",
+        platform: "Amazon.in",
+        category: "ecommerce",
+        categoryLabel: "Online Shopping",
+        categoryIcon: "📦",
+        subject: "Your Amazon.in order has been shipped",
+        date: d(2),
+        estimatedCo2: 7.5,
+        needsReview: false,
+      },
+      {
+        id: "d6",
+        platform: "Zepto",
+        category: "quick_commerce",
+        categoryLabel: "Quick Commerce",
+        categoryIcon: "⚡",
+        subject: "Zepto: Order delivered in 9 minutes!",
+        date: d(3),
+        estimatedCo2: 3.8,
+        needsReview: false,
+      },
+      {
+        id: "d7",
+        platform: "IndiGo",
+        category: "flight",
+        categoryLabel: "Flight",
+        categoryIcon: "✈️",
+        subject: "E-ticket for your IndiGo flight DEL→BOM",
+        date: d(4),
+        estimatedCo2: 180,
+        needsReview: true,
+      },
+      {
+        id: "d8",
+        platform: "Ola",
+        category: "transport_cab",
+        categoryLabel: "Cab Ride",
+        categoryIcon: "🚕",
+        subject: "Thanks for riding with Ola!",
+        date: d(4),
+        estimatedCo2: 3.2,
+        needsReview: false,
+      },
+      {
+        id: "d9",
+        platform: "Flipkart",
+        category: "ecommerce",
+        categoryLabel: "Online Shopping",
+        categoryIcon: "📦",
+        subject: "Flipkart: Your order #FL-28394 has shipped",
+        date: d(5),
+        estimatedCo2: 7.5,
+        needsReview: false,
+      },
+      {
+        id: "d10",
+        platform: "Swiggy",
+        category: "food_delivery",
+        categoryLabel: "Food Delivery",
+        categoryIcon: "🍔",
+        subject: "Your Swiggy Instamart order is delivered",
+        date: d(5),
+        estimatedCo2: 5.5,
+        needsReview: false,
+      },
+      {
+        id: "d11",
+        platform: "BESCOM",
+        category: "electricity",
+        categoryLabel: "Electricity Bill",
+        categoryIcon: "💡",
+        subject: "BESCOM: Your November electricity bill is ready",
+        date: d(6),
+        estimatedCo2: null,
+        needsReview: true,
+      },
+      {
+        id: "d12",
+        platform: "MakeMyTrip",
+        category: "travel",
+        categoryLabel: "Travel Booking",
+        categoryIcon: "🗺️",
+        subject: "Your hotel booking at Goa is confirmed!",
+        date: d(6),
+        estimatedCo2: 15,
+        needsReview: false,
+      },
+      {
+        id: "d13",
+        platform: "Zomato",
+        category: "food_delivery",
+        categoryLabel: "Food Delivery",
+        categoryIcon: "🍔",
+        subject: "Zomato: Your order from Burger King is confirmed",
+        date: d(7),
+        estimatedCo2: 5.5,
+        needsReview: false,
+      },
+      {
+        id: "d14",
+        platform: "IRCTC",
+        category: "transport_train",
+        categoryLabel: "Train Journey",
+        categoryIcon: "🚂",
+        subject: "E-ticket for your IRCTC booking PNR: 1234567890",
+        date: d(7),
+        estimatedCo2: 0.8,
+        needsReview: false,
+      },
     ];
   }
 

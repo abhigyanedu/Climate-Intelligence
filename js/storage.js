@@ -8,7 +8,9 @@
 const Storage = (() => {
   const NS = "ecomind_";
 
-  function _key(k) { return NS + k; }
+  function _key(k) {
+    return NS + k;
+  }
 
   /**
    * Save a value (auto-serialized to JSON).
@@ -67,8 +69,8 @@ const Storage = (() => {
       id: Date.now() + Math.random().toString(36).slice(2),
       timestamp: new Date().toISOString(),
       date: entry.date || new Date().toISOString().slice(0, 10),
-      category: entry.category,     // transport|food_delivery|quick_commerce|ecommerce|electricity|flight|digital|accommodation|manual
-      source: entry.source,         // "Gmail - Zomato" | "Manual" | "Gemini Vision" | "Maps" etc.
+      category: entry.category, // transport|food_delivery|quick_commerce|ecommerce|electricity|flight|digital|accommodation|manual
+      source: entry.source, // "Gmail - Zomato" | "Manual" | "Gemini Vision" | "Maps" etc.
       co2: parseFloat(entry.co2) || 0,
       details: entry.details || {},
     };
@@ -124,7 +126,11 @@ const Storage = (() => {
       const dateStr = d.toISOString().slice(0, 10);
       const entries = getEntries({ from: dateStr, to: dateStr });
       const total = entries.reduce((sum, e) => sum + e.co2, 0);
-      days.push({ date: dateStr, label: d.toLocaleDateString("en", { weekday: "short" }), co2: parseFloat(total.toFixed(2)) });
+      days.push({
+        date: dateStr,
+        label: d.toLocaleDateString("en", { weekday: "short" }),
+        co2: parseFloat(total.toFixed(2)),
+      });
     }
     return days;
   }
@@ -187,10 +193,18 @@ const Storage = (() => {
   }
 
   return {
-    set, get, remove, clear,
-    addEntry, getEntries, deleteEntry, summarize,
-    getLast7Days, getLast4Weeks,
-    getSettings, saveSettings,
+    set,
+    get,
+    remove,
+    clear,
+    addEntry,
+    getEntries,
+    deleteEntry,
+    summarize,
+    getLast7Days,
+    getLast4Weeks,
+    getSettings,
+    saveSettings,
     updateStreak,
   };
 })();

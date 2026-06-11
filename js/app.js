@@ -36,7 +36,7 @@ const App = (() => {
       localStorage.removeItem("maps_api_key");
       _showScreen("auth");
       // Reshow API key modal for next login
-      document.getElementById('api-key-modal')?.classList.remove('hidden');
+      document.getElementById("api-key-modal")?.classList.remove("hidden");
     });
 
     // Demo mode entry
@@ -75,31 +75,31 @@ const App = (() => {
   }
 
   function _checkApiKeys() {
-    const geminiKey = localStorage.getItem('gemini_api_key');
-    const mapsKey = localStorage.getItem('maps_api_key');
-    
+    const geminiKey = localStorage.getItem("gemini_api_key");
+    const mapsKey = localStorage.getItem("maps_api_key");
+
     if (geminiKey && window.ECOMIND_CONFIG) {
       window.ECOMIND_CONFIG.GEMINI_API_KEY = geminiKey;
       window.ECOMIND_CONFIG.MAPS_API_KEY = mapsKey;
       window.ECOMIND_CONFIG.DEMO_MODE = false;
     }
-    
+
     if (!geminiKey && !window.ECOMIND_CONFIG?.DEMO_MODE) {
-      document.getElementById('api-key-modal')?.classList.remove('hidden');
+      document.getElementById("api-key-modal")?.classList.remove("hidden");
     }
 
     // Wire up the API Keys form
-    document.getElementById('form-api-keys')?.addEventListener('submit', (e) => {
+    document.getElementById("form-api-keys")?.addEventListener("submit", (e) => {
       e.preventDefault();
-      const gemini = document.getElementById('input-gemini-key').value;
-      const maps = document.getElementById('input-maps-key').value;
-      
-      if (gemini) localStorage.setItem('gemini_api_key', gemini);
-      if (maps) localStorage.setItem('maps_api_key', maps);
-      
-      document.getElementById('api-key-modal')?.classList.add('hidden');
-      _showToast('API Keys saved securely to browser.');
-      
+      const gemini = document.getElementById("input-gemini-key").value;
+      const maps = document.getElementById("input-maps-key").value;
+
+      if (gemini) localStorage.setItem("gemini_api_key", gemini);
+      if (maps) localStorage.setItem("maps_api_key", maps);
+
+      document.getElementById("api-key-modal")?.classList.add("hidden");
+      _showToast("API Keys saved securely to browser.");
+
       // Update config object in memory so current session uses them
       if (window.ECOMIND_CONFIG) {
         window.ECOMIND_CONFIG.GEMINI_API_KEY = gemini;
@@ -109,12 +109,12 @@ const App = (() => {
     });
 
     // Wire up demo mode button in modal
-    document.getElementById('btn-demo-mode-modal')?.addEventListener('click', () => {
-      document.getElementById('api-key-modal')?.classList.add('hidden');
+    document.getElementById("btn-demo-mode-modal")?.addEventListener("click", () => {
+      document.getElementById("api-key-modal")?.classList.add("hidden");
       if (window.ECOMIND_CONFIG) {
         window.ECOMIND_CONFIG.DEMO_MODE = true;
       }
-      _showToast('Demo Mode activated.');
+      _showToast("Demo Mode activated.");
     });
   }
 
@@ -209,11 +209,21 @@ const App = (() => {
 
     // Page-specific initialization
     switch (page) {
-      case "dashboard": _renderDashboard(); break;
-      case "email-sync": _renderEmailSync(); break;
-      case "route": _renderRoute(); break;
-      case "log": _renderLog(); break;
-      case "goals": _renderGoals(); break;
+      case "dashboard":
+        _renderDashboard();
+        break;
+      case "email-sync":
+        _renderEmailSync();
+        break;
+      case "route":
+        _renderRoute();
+        break;
+      case "log":
+        _renderLog();
+        break;
+      case "goals":
+        _renderGoals();
+        break;
     }
 
     // Refresh icons after render
@@ -224,7 +234,9 @@ const App = (() => {
 
   function _showScreen(screen) {
     document.getElementById("screen-auth")?.classList.toggle("hidden", screen !== "auth");
-    document.getElementById("screen-onboarding")?.classList.toggle("hidden", screen !== "onboarding");
+    document
+      .getElementById("screen-onboarding")
+      ?.classList.toggle("hidden", screen !== "onboarding");
     document.getElementById("screen-app")?.classList.toggle("hidden", screen !== "app");
   }
 
@@ -272,7 +284,8 @@ const App = (() => {
     const goalBar = document.getElementById("goal-progress-bar");
     const goalText = document.getElementById("goal-progress-text");
     if (goalBar) goalBar.style.width = pct + "%";
-    if (goalText) goalText.textContent = `${monthlySummary.total.toFixed(1)} / ${goal} kg CO₂ monthly goal`;
+    if (goalText)
+      goalText.textContent = `${monthlySummary.total.toFixed(1)} / ${goal} kg CO₂ monthly goal`;
     if (goalBar) goalBar.style.background = pct > 80 ? "#ff6b6b" : pct > 50 ? "#ff9f40" : "#00ff87";
   }
 
@@ -284,16 +297,18 @@ const App = (() => {
       .sort(([, a], [, b]) => b - a)
       .slice(0, 5);
 
-    container.innerHTML = sorted.map(([cat, co2]) => {
-      const color = Charts.CATEGORY_COLORS[cat] || "#94a3b8";
-      const label = Charts.CATEGORY_LABELS[cat] || cat;
-      return `
+    container.innerHTML = sorted
+      .map(([cat, co2]) => {
+        const color = Charts.CATEGORY_COLORS[cat] || "#94a3b8";
+        const label = Charts.CATEGORY_LABELS[cat] || cat;
+        return `
         <div class="category-pill" style="border-color:${color}22; background:${color}11;">
           <span class="pill-dot" style="background:${color}"></span>
           <span class="pill-label">${label}</span>
           <span class="pill-value" style="color:${color}">${co2.toFixed(1)} kg</span>
         </div>`;
-    }).join("");
+      })
+      .join("");
   }
 
   async function _loadInsight() {
@@ -314,8 +329,8 @@ const App = (() => {
       const thisWeek = Storage.summarize({ from: weekAgo, to: today });
       const lastWeek = Storage.summarize({ from: twoWeeksAgo, to: weekAgo });
 
-      const topCategory = Object.entries(thisWeek.byCategory)
-        .sort(([, a], [, b]) => b - a)[0]?.[0] || "general";
+      const topCategory =
+        Object.entries(thisWeek.byCategory).sort(([, a], [, b]) => b - a)[0]?.[0] || "general";
 
       const insight = await GeminiClient.generateWeeklyInsight({
         summary: thisWeek,
@@ -367,7 +382,9 @@ const App = (() => {
 
       Storage.saveSettings({ gmailSynced: true });
 
-      list.innerHTML = results.map((r) => `
+      list.innerHTML = results
+        .map(
+          (r) => `
         <div class="email-item" data-id="${r.id}" data-co2="${r.estimatedCo2 || 0}" data-category="${r.category}">
           <div class="email-icon"><i data-lucide="${r.categoryIcon}"></i></div>
           <div class="email-body">
@@ -375,7 +392,7 @@ const App = (() => {
             <div class="email-subject">${r.subject}</div>
             <div class="email-date">${r.date}</div>
           </div>
-          <div class="email-co2 ${r.needsReview ? 'needs-review' : ''}">
+          <div class="email-co2 ${r.needsReview ? "needs-review" : ""}">
             ${r.estimatedCo2 ? `<span>${r.estimatedCo2.toFixed(1)}</span><small>kg CO₂</small>` : `<span class="review-badge">Review</span>`}
           </div>
           <button class="btn-add-entry" data-item='${JSON.stringify({
@@ -383,10 +400,12 @@ const App = (() => {
             source: `Gmail - ${r.platform}`,
             co2: r.estimatedCo2 || 0,
             date: r.date,
-            details: { subject: r.subject, platform: r.platform }
+            details: { subject: r.subject, platform: r.platform },
           })}' aria-label="Add ${r.platform} entry"><i data-lucide="plus"></i></button>
         </div>
-      `).join("");
+      `
+        )
+        .join("");
 
       // Wire add buttons
       document.querySelectorAll(".btn-add-entry").forEach((btn) => {
@@ -405,16 +424,18 @@ const App = (() => {
       if (addAllBtn) {
         addAllBtn.classList.remove("hidden");
         addAllBtn.addEventListener("click", () => {
-          results.filter(r => r.estimatedCo2).forEach(r => {
-            Storage.addEntry({
-              category: r.category,
-              source: `Gmail - ${r.platform}`,
-              co2: r.estimatedCo2,
-              date: r.date,
-              details: { subject: r.subject, platform: r.platform }
+          results
+            .filter((r) => r.estimatedCo2)
+            .forEach((r) => {
+              Storage.addEntry({
+                category: r.category,
+                source: `Gmail - ${r.platform}`,
+                co2: r.estimatedCo2,
+                date: r.date,
+                details: { subject: r.subject, platform: r.platform },
+              });
             });
-          });
-          _showToast(`Added ${results.filter(r => r.estimatedCo2).length} entries from Gmail`);
+          _showToast(`Added ${results.filter((r) => r.estimatedCo2).length} entries from Gmail`);
           navigate("dashboard");
         });
       }
@@ -437,10 +458,11 @@ const App = (() => {
       return;
     }
 
-    logList.innerHTML = entries.map((e) => {
-      const color = Charts.CATEGORY_COLORS[e.category] || "#94a3b8";
-      const icon = _getCategoryIcon(e.category);
-      return `
+    logList.innerHTML = entries
+      .map((e) => {
+        const color = Charts.CATEGORY_COLORS[e.category] || "#94a3b8";
+        const icon = _getCategoryIcon(e.category);
+        return `
         <div class="log-entry">
           <div class="log-entry-icon" style="background:${color}22; color:${color}"><i data-lucide="${icon}"></i></div>
           <div class="log-entry-body">
@@ -450,7 +472,8 @@ const App = (() => {
           <div class="log-entry-co2" style="color:${color}">${e.co2.toFixed(2)} kg</div>
           <button class="btn-delete-entry" data-id="${e.id}" aria-label="Delete entry"><i data-lucide="trash-2"></i></button>
         </div>`;
-    }).join("");
+      })
+      .join("");
 
     document.querySelectorAll(".btn-delete-entry").forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -484,7 +507,11 @@ const App = (() => {
       const foodType = document.getElementById("food-type").value;
       const isQC = document.getElementById("food-isqc").checked;
       const result = CarbonEngine.calcFoodDelivery(foodType, isQC);
-      Storage.addEntry({ category: isQC ? "quick_commerce" : "food_delivery", source: `Manual - Food Delivery`, co2: result.total });
+      Storage.addEntry({
+        category: isQC ? "quick_commerce" : "food_delivery",
+        source: `Manual - Food Delivery`,
+        co2: result.total,
+      });
       _showToast(`Logged ${result.total.toFixed(2)} kg CO₂ for food delivery`);
       navigate("dashboard");
     });
@@ -495,7 +522,7 @@ const App = (() => {
       const appliance = document.getElementById("appliance-type").value;
       const hours = parseFloat(document.getElementById("appliance-hours").value);
       const days = parseFloat(document.getElementById("appliance-days").value) || 1;
-      
+
       if (isNaN(hours) || hours <= 0 || hours > 24 || isNaN(days) || days <= 0 || days > 365) {
         _showToast("Please enter valid hours (1-24) and days (1-365).");
         return;
@@ -527,14 +554,19 @@ const App = (() => {
       e.preventDefault();
       const dist = parseFloat(document.getElementById("flight-distance").value);
       const cls = document.getElementById("flight-class").value;
-      
+
       if (isNaN(dist) || dist <= 0 || dist > 20000) {
         _showToast("Please enter a valid flight distance.");
         return;
       }
 
       const co2 = CarbonEngine.calcFlight(dist, cls);
-      Storage.addEntry({ category: "flight", source: `Manual - Flight`, co2, details: { distanceKm: dist, class: cls } });
+      Storage.addEntry({
+        category: "flight",
+        source: `Manual - Flight`,
+        co2,
+        details: { distanceKm: dist, class: cls },
+      });
       _showToast(`Logged ${co2.toFixed(1)} kg CO₂ for flight`);
       navigate("dashboard");
     });
@@ -549,7 +581,10 @@ const App = (() => {
 
     // Drop zone
     dropZone?.addEventListener("click", () => fileInput?.click());
-    dropZone?.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.classList.add("drag-over"); });
+    dropZone?.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropZone.classList.add("drag-over");
+    });
     dropZone?.addEventListener("dragleave", () => dropZone.classList.remove("drag-over"));
     dropZone?.addEventListener("drop", (e) => {
       e.preventDefault();
@@ -566,11 +601,13 @@ const App = (() => {
     // Scan type toggle
     document.querySelectorAll(".scan-type-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".scan-type-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".scan-type-btn").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         const type = btn.dataset.scanType;
         document.getElementById("scan-hint").textContent =
-          type === "bill" ? "Upload your monthly electricity bill image" : "Snap a photo of your shopping receipt";
+          type === "bill"
+            ? "Upload your monthly electricity bill image"
+            : "Snap a photo of your shopping receipt";
       });
     });
   }
@@ -581,13 +618,14 @@ const App = (() => {
     const scanType = document.querySelector(".scan-type-btn.active")?.dataset.scanType || "receipt";
 
     if (!resultEl || !loadingEl) return;
-    
+
     // EDGE CASE: File validation
     if (!file.type.startsWith("image/")) {
       _showToast("Please upload a valid image file (JPG/PNG).");
       return;
     }
-    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+    if (file.size > 5 * 1024 * 1024) {
+      // 5MB limit
       _showToast("File is too large. Please upload an image under 5MB.");
       return;
     }
@@ -645,10 +683,16 @@ const App = (() => {
 
   function _estimateReceiptCO2(items) {
     const categoryMap = {
-      food_veg: "veg_meal", food_nonveg: "chicken_meal", dairy: "paneer_meal",
-      electronics: "electronics_small", clothing: "clothing_fast_fashion",
-      grocery: "groceries_packaged", book: "books", toy: "toys",
-      appliance: "home_appliance_small", home_goods: "furniture_small",
+      food_veg: "veg_meal",
+      food_nonveg: "chicken_meal",
+      dairy: "paneer_meal",
+      electronics: "electronics_small",
+      clothing: "clothing_fast_fashion",
+      grocery: "groceries_packaged",
+      book: "books",
+      toy: "toys",
+      appliance: "home_appliance_small",
+      home_goods: "furniture_small",
       beauty: "beauty_cosmetics",
     };
     return items.reduce((sum, item) => {
@@ -681,12 +725,16 @@ const App = (() => {
       <div class="scan-result-card">
         <h3>🧾 Receipt Analysis — ${receipt.vendor}</h3>
         <div class="scan-items-list">
-          ${receipt.items.map(item => `
+          ${receipt.items
+            .map(
+              (item) => `
             <div class="scan-item">
               <span>${item.name}</span>
               <span class="item-qty">×${item.qty || 1}</span>
               <span class="item-cat">${item.category}</span>
-            </div>`).join("")}
+            </div>`
+            )
+            .join("")}
         </div>
         <div class="scan-co2-result">
           <span class="co2-big">${co2.toFixed(2)}</span>
@@ -757,14 +805,15 @@ const App = (() => {
             category: "transport_cab",
             source: `Route - ${selectedMode}`,
             co2: selectedCO2,
-            details: { origin, dest, distanceKm: result.distanceKm, mode: selectedMode }
+            details: { origin, dest, distanceKm: result.distanceKm, mode: selectedMode },
           });
           _showToast(`Logged ${selectedCO2.toFixed(3)} kg CO₂ for trip`);
           navigate("dashboard");
         });
       } catch (err) {
         loadingEl?.classList.add("hidden");
-        resultEl && (resultEl.innerHTML = `<div class="route-error">Could not calculate route: ${err.message}</div>`);
+        resultEl &&
+          (resultEl.innerHTML = `<div class="route-error">Could not calculate route: ${err.message}</div>`);
       }
     });
   }
@@ -786,7 +835,9 @@ const App = (() => {
     try {
       const goals = await GeminiClient.generateGoals({ summary, settings });
 
-      container.innerHTML = goals.map((g, i) => `
+      container.innerHTML = goals
+        .map(
+          (g, i) => `
         <div class="goal-card" aria-label="Goal: ${g.title}">
           <div class="goal-header">
             <div class="goal-difficulty goal-${g.difficulty}">${g.difficulty}</div>
@@ -798,7 +849,9 @@ const App = (() => {
             <div class="goal-progress-bar" style="width:0%" id="goal-bar-${i}"></div>
           </div>
           <button class="btn-accept-goal" data-idx="${i}" aria-label="Accept goal: ${g.title}">Set This Goal →</button>
-        </div>`).join("");
+        </div>`
+        )
+        .join("");
 
       document.querySelectorAll(".btn-accept-goal").forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -856,7 +909,11 @@ const App = (() => {
     });
 
     document.getElementById("btn-signout-main")?.addEventListener("click", () => {
-      if (confirm("Warning: Signing out will completely wipe your local carbon log data from this browser. Are you sure you want to proceed?")) {
+      if (
+        confirm(
+          "Warning: Signing out will completely wipe your local carbon log data from this browser. Are you sure you want to proceed?"
+        )
+      ) {
         Auth.signOut();
       }
     });
@@ -868,7 +925,7 @@ const App = (() => {
   function _updateUserUI(user) {
     const nameEl = document.getElementById("user-name");
     const avatarEl = document.getElementById("user-avatar");
-    
+
     // Settings profile UI
     const settingsNameEl = document.getElementById("settings-name");
     const settingsEmailEl = document.getElementById("settings-email");
@@ -878,7 +935,7 @@ const App = (() => {
     if (settingsEmailEl) settingsEmailEl.textContent = user.email || "";
 
     if (nameEl) nameEl.textContent = user.name || user.email;
-    
+
     if (user.picture) {
       if (avatarEl) {
         avatarEl.src = user.picture;
@@ -911,9 +968,17 @@ const App = (() => {
 
   function _getCategoryIcon(category) {
     const icons = {
-      transport_cab: "car", transport_train: "train", food_delivery: "pizza",
-      quick_commerce: "zap", ecommerce: "package", electricity: "lightbulb",
-      flight: "plane", accommodation: "hotel", digital: "smartphone", manual: "pen-tool", travel: "map",
+      transport_cab: "car",
+      transport_train: "train",
+      food_delivery: "pizza",
+      quick_commerce: "zap",
+      ecommerce: "package",
+      electricity: "lightbulb",
+      flight: "plane",
+      accommodation: "hotel",
+      digital: "smartphone",
+      manual: "pen-tool",
+      travel: "map",
     };
     return icons[category] || "bar-chart-2";
   }

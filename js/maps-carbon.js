@@ -95,11 +95,11 @@ const MapsCarbon = (() => {
             comparison,
             maxSaving: parseFloat((maxCO2 - minCO2).toFixed(2)),
             getTreeSavings: (selectedModeCO2) => {
-              const carCO2 = comparison.find(m => m.mode === 'petrol_car_solo')?.co2 || maxCO2;
+              const carCO2 = comparison.find((m) => m.mode === "petrol_car_solo")?.co2 || maxCO2;
               const savedKg = Math.max(0, carCO2 - selectedModeCO2);
-              // 1 tree absorbs ~22kg of CO2 per year. 
+              // 1 tree absorbs ~22kg of CO2 per year.
               return parseFloat((savedKg / 22).toFixed(3));
-            }
+            },
           });
         }
       );
@@ -123,10 +123,10 @@ const MapsCarbon = (() => {
       comparison,
       maxSaving: parseFloat((maxCO2 - minCO2).toFixed(2)),
       getTreeSavings: (selectedModeCO2) => {
-        const carCO2 = comparison.find(m => m.mode === 'petrol_car_solo')?.co2 || maxCO2;
+        const carCO2 = comparison.find((m) => m.mode === "petrol_car_solo")?.co2 || maxCO2;
         const savedKg = Math.max(0, carCO2 - selectedModeCO2);
         return parseFloat((savedKg / 22).toFixed(3));
-      }
+      },
     };
   }
 
