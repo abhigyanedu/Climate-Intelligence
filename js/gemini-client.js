@@ -93,7 +93,11 @@ const GeminiClient = (() => {
    */
   async function analyzeReceipt(imageFile) {
     const cfg = window.ECOMIND_CONFIG;
-    if (cfg?.DEMO_MODE || !cfg?.GEMINI_API_KEY?.startsWith("AIza")) return _demoReceiptResult();
+    if (cfg?.DEMO_MODE) return _demoReceiptResult();
+    if (!cfg?.GEMINI_API_KEY?.startsWith("AIza")) {
+      document.getElementById("api-key-modal")?.classList.remove("hidden");
+      throw new Error("Please provide your Gemini API Key to scan receipts.");
+    }
 
     const base64 = await _toBase64(imageFile);
     const prompt = `You are a carbon footprint analyst. Analyze this shopping receipt image.
@@ -134,7 +138,11 @@ Respond ONLY with valid JSON in this exact format:
    */
   async function analyzeElectricityBill(imageFile) {
     const cfg = window.ECOMIND_CONFIG;
-    if (cfg?.DEMO_MODE || !cfg?.GEMINI_API_KEY?.startsWith("AIza")) return _demoBillResult();
+    if (cfg?.DEMO_MODE) return _demoBillResult();
+    if (!cfg?.GEMINI_API_KEY?.startsWith("AIza")) {
+      document.getElementById("api-key-modal")?.classList.remove("hidden");
+      throw new Error("Please provide your Gemini API Key to scan bills.");
+    }
 
     const base64 = await _toBase64(imageFile);
     const prompt = `You are an electricity bill analyst. Extract information from this electricity bill image.
