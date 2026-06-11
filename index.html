@@ -152,7 +152,7 @@
         <h3>Step 2: Electricity Grid Baseline</h3>
         <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Where do you live? We need this to calculate accurate CO₂ from your home energy and appliance usage.</p>
         <div class="form-group">
-          <label class="form-label">Electricity Grid Region</label>
+          <label class="form-label" for="onboard-region-select">Electricity Grid Region</label>
           <select id="onboard-region-select">
             <!-- Populated dynamically -->
           </select>
@@ -201,11 +201,11 @@
         <p>To use EcoMind, please provide your API keys. They are stored securely in your browser's local storage and are never sent to our servers.</p>
         <form id="form-api-keys">
           <div class="form-group">
-            <label>Google Gemini API Key</label>
+            <label for="input-gemini-key">Google Gemini API Key</label>
             <input type="password" id="input-gemini-key" placeholder="AI Studio Key..." required />
           </div>
           <div class="form-group">
-            <label>Google Maps API Key (Optional)</label>
+            <label for="input-maps-key">Google Maps API Key (Optional)</label>
             <input type="password" id="input-maps-key" placeholder="Maps Platform Key..." />
           </div>
           <button type="submit" class="btn-primary w-full" aria-label="Save keys">Save & Continue</button>
