@@ -28,6 +28,46 @@
 
   <!-- Google Identity Services (loads async) -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  
+  <!-- Firebase (Optional / Hackathon Edge Cases) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+
+    // Global Error Boundary
+    window.addEventListener("error", (event) => {
+      console.error("Global Error Caught:", event.error);
+      const toast = document.getElementById("toast");
+      if (toast) {
+        toast.textContent = "An unexpected error occurred.";
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+      if (window._firebaseAnalytics) {
+        logEvent(window._firebaseAnalytics, "exception", { description: event.message, fatal: true });
+      }
+    });
+
+    window.addEventListener("unhandledrejection", (event) => {
+      console.warn("Unhandled Promise Rejection:", event.reason);
+      if (window._firebaseAnalytics) {
+        logEvent(window._firebaseAnalytics, "exception", { description: event.reason?.message || "Promise Rejection", fatal: false });
+      }
+    });
+
+    // We only init Firebase if the config is provided
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.ECOMIND_CONFIG?.FIREBASE_CONFIG) {
+        try {
+          const app = initializeApp(window.ECOMIND_CONFIG.FIREBASE_CONFIG);
+          window._firebaseAnalytics = getAnalytics(app);
+          logEvent(window._firebaseAnalytics, "app_open");
+        } catch (e) {
+          console.warn("Firebase init failed:", e);
+        }
+      }
+    });
+  </script>
 </head>
 <body>
 

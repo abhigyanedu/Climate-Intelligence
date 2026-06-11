@@ -32,7 +32,11 @@ const App = (() => {
     // Sign out
     document.getElementById("btn-signout")?.addEventListener("click", () => {
       Auth.signOut();
+      localStorage.removeItem("gemini_api_key");
+      localStorage.removeItem("maps_api_key");
       _showScreen("auth");
+      // Reshow API key modal for next login
+      document.getElementById('api-key-modal')?.classList.remove('hidden');
     });
 
     // Demo mode entry
@@ -394,7 +398,10 @@ const App = (() => {
       e.preventDefault();
       const mode = document.getElementById("transport-mode").value;
       const dist = parseFloat(document.getElementById("transport-dist").value);
-      if (!dist || dist <= 0) return;
+      if (!dist || dist <= 0 || dist > 100000) {
+        _showToast("Please enter a valid distance.");
+        return;
+      }
 
       const co2 = CarbonEngine.calcTransport(mode, dist);
       Storage.addEntry({ category: "transport_cab", source: `Manual - ${mode}`, co2 });
@@ -419,6 +426,12 @@ const App = (() => {
       const appliance = document.getElementById("appliance-type").value;
       const hours = parseFloat(document.getElementById("appliance-hours").value);
       const days = parseFloat(document.getElementById("appliance-days").value) || 1;
+      
+      if (hours <= 0 || hours > 24 || days <= 0 || days > 365) {
+        _showToast("Please enter valid hours (1-24) and days (1-365).");
+        return;
+      }
+
       const co2 = CarbonEngine.calcAppliance(appliance, hours, days);
       Storage.addEntry({ category: "electricity", source: `Manual - ${appliance}`, co2 });
       _showToast(`Logged ${co2.toFixed(2)} kg CO₂`);
@@ -441,6 +454,12 @@ const App = (() => {
       e.preventDefault();
       const dist = parseFloat(document.getElementById("flight-distance").value);
       const cls = document.getElementById("flight-class").value;
+      
+      if (dist <= 0 || dist > 20000) {
+        _showToast("Please enter a valid flight distance.");
+        return;
+      }
+
       const co2 = CarbonEngine.calcFlight(dist, cls);
       Storage.addEntry({ category: "flight", source: `Manual - Flight`, co2, details: { distanceKm: dist, class: cls } });
       _showToast(`Logged ${co2.toFixed(1)} kg CO₂ for flight`);
@@ -489,6 +508,16 @@ const App = (() => {
     const scanType = document.querySelector(".scan-type-btn.active")?.dataset.scanType || "receipt";
 
     if (!resultEl || !loadingEl) return;
+    
+    // EDGE CASE: File validation
+    if (!file.type.startsWith("image/")) {
+      _showToast("Please upload a valid image file (JPG/PNG).");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      _showToast("File is too large. Please upload an image under 5MB.");
+      return;
+    }
 
     loadingEl.classList.remove("hidden");
     resultEl.innerHTML = "";

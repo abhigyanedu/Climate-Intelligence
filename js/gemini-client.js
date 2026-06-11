@@ -15,7 +15,7 @@ const GeminiClient = (() => {
    * @param {Array} parts - array of {text} or {inlineData: {mimeType, data}}
    * @returns {string} Gemini response text
    */
-  async function _generate(parts) {
+  async function _generate(parts, retries = 3) {
     const cfg = window.ECOMIND_CONFIG;
     if (!cfg || cfg.DEMO_MODE || !cfg.GEMINI_API_KEY || cfg.GEMINI_API_KEY.startsWith("YOUR_")) {
       return null; // Demo mode — caller handles fallback
@@ -27,19 +27,47 @@ const GeminiClient = (() => {
       generationConfig: { temperature: 0.3, maxOutputTokens: 1024 },
     };
 
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    let attempt = 0;
+    while (attempt < retries) {
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
 
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(`Gemini error ${res.status}: ${err?.error?.message || "Unknown"}`);
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          const errMsg = err?.error?.message || "Unknown";
+          
+          if (res.status === 400) {
+            throw new Error(`Invalid API Key or Bad Request: ${errMsg}`);
+          }
+          if (res.status === 429) {
+            // Quota exceeded or rate limited
+            if (attempt < retries - 1) {
+              attempt++;
+              const waitMs = Math.pow(2, attempt) * 1000;
+              console.warn(`[Gemini] Rate limited. Retrying in ${waitMs}ms...`);
+              await new Promise(r => setTimeout(r, waitMs));
+              continue;
+            }
+            throw new Error(`Quota Exceeded: ${errMsg}`);
+          }
+          throw new Error(`Gemini error ${res.status}: ${errMsg}`);
+        }
+
+        const data = await res.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+      } catch (err) {
+        if (err.message.includes('Quota') || err.message.includes('Invalid')) {
+          throw err; // don't retry hard errors
+        }
+        if (attempt >= retries - 1) throw err;
+        attempt++;
+        await new Promise(r => setTimeout(r, 1000 * attempt));
+      }
     }
-
-    const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
   }
 
   /**

@@ -70,8 +70,12 @@ const MapsCarbon = (() => {
           travelMode: window.google.maps.TravelMode.DRIVING,
         },
         (result, status) => {
+          if (status === "ZERO_RESULTS") {
+            reject(new Error("No driving route could be found between these locations."));
+            return;
+          }
           if (status !== "OK") {
-            reject(new Error(`Directions API: ${status}`));
+            reject(new Error(`Maps API failed: ${status}`));
             return;
           }
 
