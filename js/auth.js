@@ -31,15 +31,23 @@ const Auth = (() => {
     }
 
     if (!window.google?.accounts?.oauth2) {
-      console.warn("[Auth] GIS not loaded yet");
+      console.warn("[Auth] GIS not loaded yet, will initialize on sign in");
       return;
     }
 
+    _initTokenClient(cfg);
+  }
+
+  function _initTokenClient(cfg) {
+    if (_tokenClient) return true;
+    if (!window.google?.accounts?.oauth2) return false;
+    
     _tokenClient = window.google.accounts.oauth2.initTokenClient({
       client_id: cfg.GOOGLE_CLIENT_ID,
       scope: SCOPES,
       callback: _handleTokenResponse,
     });
+    return true;
   }
 
   /**
@@ -55,8 +63,10 @@ const Auth = (() => {
     }
 
     if (!_tokenClient) {
-      console.error("[Auth] Token client not initialized");
-      return;
+      if (!_initTokenClient(cfg)) {
+        console.error("[Auth] GIS script still not loaded or blocked by browser.");
+        return;
+      }
     }
 
     _tokenClient.requestAccessToken({ prompt: "consent" });

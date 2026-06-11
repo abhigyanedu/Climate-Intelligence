@@ -398,7 +398,7 @@ const App = (() => {
       e.preventDefault();
       const mode = document.getElementById("transport-mode").value;
       const dist = parseFloat(document.getElementById("transport-dist").value);
-      if (!dist || dist <= 0 || dist > 100000) {
+      if (isNaN(dist) || dist <= 0 || dist > 100000) {
         _showToast("Please enter a valid distance.");
         return;
       }
@@ -427,7 +427,7 @@ const App = (() => {
       const hours = parseFloat(document.getElementById("appliance-hours").value);
       const days = parseFloat(document.getElementById("appliance-days").value) || 1;
       
-      if (hours <= 0 || hours > 24 || days <= 0 || days > 365) {
+      if (isNaN(hours) || hours <= 0 || hours > 24 || isNaN(days) || days <= 0 || days > 365) {
         _showToast("Please enter valid hours (1-24) and days (1-365).");
         return;
       }
@@ -443,6 +443,10 @@ const App = (() => {
       e.preventDefault();
       const activity = document.getElementById("digital-activity").value;
       const hours = parseFloat(document.getElementById("digital-hours").value);
+      if (isNaN(hours) || hours <= 0 || hours > 24) {
+        _showToast("Please enter a valid number of hours.");
+        return;
+      }
       const co2 = CarbonEngine.calcDigital(activity, hours);
       Storage.addEntry({ category: "digital", source: `Manual - Digital`, co2 });
       _showToast(`Logged ${co2.toFixed(4)} kg CO₂ for ${hours}h of ${activity}`);
@@ -455,7 +459,7 @@ const App = (() => {
       const dist = parseFloat(document.getElementById("flight-distance").value);
       const cls = document.getElementById("flight-class").value;
       
-      if (dist <= 0 || dist > 20000) {
+      if (isNaN(dist) || dist <= 0 || dist > 20000) {
         _showToast("Please enter a valid flight distance.");
         return;
       }

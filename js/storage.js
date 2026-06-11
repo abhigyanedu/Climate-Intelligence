@@ -69,9 +69,10 @@ const Storage = (() => {
       date: entry.date || new Date().toISOString().slice(0, 10),
       category: entry.category,     // transport|food_delivery|quick_commerce|ecommerce|electricity|flight|digital|accommodation|manual
       source: entry.source,         // "Gmail - Zomato" | "Manual" | "Gemini Vision" | "Maps" etc.
-      co2: parseFloat(entry.co2.toFixed(3)),
+      co2: parseFloat(entry.co2) || 0,
       details: entry.details || {},
     };
+    if (isNaN(newEntry.co2) || newEntry.co2 < 0) newEntry.co2 = 0;
     log.push(newEntry);
     set("log", log);
     return newEntry;
@@ -105,8 +106,9 @@ const Storage = (() => {
     const summary = {};
     let total = 0;
     for (const e of entries) {
-      summary[e.category] = (summary[e.category] || 0) + e.co2;
-      total += e.co2;
+      const val = parseFloat(e.co2) || 0;
+      summary[e.category] = (summary[e.category] || 0) + val;
+      total += val;
     }
     return { byCategory: summary, total: parseFloat(total.toFixed(2)), count: entries.length };
   }
