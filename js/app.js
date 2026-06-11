@@ -182,7 +182,7 @@ const App = (() => {
       btn.textContent = "Syncing...";
       btn.disabled = true;
       try {
-        await window._doGmailSync();
+        await _doGmailSync();
       } catch (e) {
         console.warn("Initial sync failed", e);
       }
