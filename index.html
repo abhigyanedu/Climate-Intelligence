@@ -129,6 +129,47 @@
     </div>
   </div>
 
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       ONBOARDING SCREEN
+  ════════════════════════════════════════════════════════ -->
+  <div id="screen-onboarding" class="hidden">
+    <div class="auth-card" style="max-width: 500px; text-align: left;">
+      <h1 class="auth-title" style="text-align: center; margin-bottom: 0.5rem;">Welcome to EcoMind</h1>
+      <p class="auth-subtitle" style="text-align: center; margin-bottom: 2rem;">Let's get your baseline set up.</p>
+
+      <div id="onboarding-step-1">
+        <h3>Step 1: Setup Gemini AI</h3>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">EcoMind uses Gemini to analyze your receipts and electricity bills securely in your browser.</p>
+        <div class="form-group">
+          <label class="form-label">Google Gemini API Key (Required)</label>
+          <input type="password" id="onboard-gemini-key" placeholder="AI Studio Key..." />
+        </div>
+        <button class="btn-primary w-full" id="btn-onboard-next-1">Next →</button>
+      </div>
+
+      <div id="onboarding-step-2" class="hidden">
+        <h3>Step 2: Electricity Grid Baseline</h3>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Where do you live? We need this to calculate accurate CO₂ from your home energy and appliance usage.</p>
+        <div class="form-group">
+          <label class="form-label">Electricity Grid Region</label>
+          <select id="onboard-region-select">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+        <button class="btn-primary w-full" id="btn-onboard-next-2">Next →</button>
+      </div>
+
+      <div id="onboarding-step-3" class="hidden">
+        <h3>Step 3: Initial Data Sync</h3>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Let's pull the last 30 days of data from your Gmail (Zomato, Uber, Amazon, etc.) so your dashboard isn't empty.</p>
+        <button class="btn-primary w-full" id="btn-onboard-sync">🔄 Sync Gmail Now</button>
+        <button class="btn-secondary w-full mt-2" id="btn-onboard-skip">Skip for now</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══════════════════════════════════════════════════════
        APP SCREEN
   ════════════════════════════════════════════════════════ -->
@@ -307,9 +348,12 @@
 
         <!-- ─── LOG ACTIVITY ─── -->
         <section id="page-log" class="page" aria-label="Log Activity">
-          <div class="page-header">
-            <h1 class="page-title">Log Activity</h1>
-            <p class="page-subtitle">Manually add any carbon-emitting activity</p>
+          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
+            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
+            <div>
+              <h1 class="page-title">Log Activity</h1>
+              <p class="page-subtitle">Manually add any carbon-emitting activity</p>
+            </div>
           </div>
 
           <!-- Tab bar -->
@@ -493,9 +537,12 @@
 
         <!-- ─── EMAIL SYNC ─── -->
         <section id="page-email-sync" class="page" aria-label="Email Sync">
-          <div class="page-header">
-            <h1 class="page-title"><i data-lucide="mail"></i> Email Carbon Sync</h1>
-            <p class="page-subtitle">Auto-detect carbon events from Zomato, Swiggy, IndiGo, Amazon, and more</p>
+          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
+            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
+            <div>
+              <h1 class="page-title"><i data-lucide="mail"></i> Email Carbon Sync</h1>
+              <p class="page-subtitle">Auto-detect carbon events from Zomato, Swiggy, IndiGo, Amazon, and more</p>
+            </div>
           </div>
 
           <div class="email-sync-header">
@@ -527,9 +574,12 @@
 
         <!-- ─── SNAP & SCAN ─── -->
         <section id="page-snap" class="page" aria-label="Snap and Scan">
-          <div class="page-header">
-            <h1 class="page-title"><i data-lucide="camera"></i> Snap &amp; Scan</h1>
-            <p class="page-subtitle">Upload a receipt or electricity bill — Gemini AI extracts the carbon data</p>
+          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
+            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
+            <div>
+              <h1 class="page-title"><i data-lucide="camera"></i> Snap &amp; Scan</h1>
+              <p class="page-subtitle">Upload a receipt or electricity bill — Gemini AI extracts the carbon data</p>
+            </div>
           </div>
 
           <div class="scan-type-row" role="group" aria-label="Scan type">
@@ -564,9 +614,12 @@
 
         <!-- ─── ROUTE CARBON ─── -->
         <section id="page-route" class="page" aria-label="Route Carbon Calculator">
-          <div class="page-header">
-            <h1 class="page-title"><i data-lucide="map"></i> Route Carbon Calculator</h1>
-            <p class="page-subtitle">See CO₂ comparison across all transport modes for your route</p>
+          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
+            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
+            <div>
+              <h1 class="page-title"><i data-lucide="map"></i> Route Carbon Calculator</h1>
+              <p class="page-subtitle">See CO₂ comparison across all transport modes for your route</p>
+            </div>
           </div>
 
           <div class="card" style="margin-bottom:1rem">
@@ -621,9 +674,12 @@
 
         <!-- ─── GOALS ─── -->
         <section id="page-goals" class="page" aria-label="Carbon Reduction Goals">
-          <div class="page-header">
-            <h1 class="page-title"><i data-lucide="target"></i> My Carbon Goals</h1>
-            <p class="page-subtitle">Gemini AI suggests goals based on your actual usage patterns</p>
+          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
+            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
+            <div>
+              <h1 class="page-title"><i data-lucide="target"></i> My Carbon Goals</h1>
+              <p class="page-subtitle">Gemini AI suggests goals based on your actual usage patterns</p>
+            </div>
           </div>
           <div class="goals-grid" id="goals-list" aria-live="polite">
             <div class="goals-loading">
@@ -635,9 +691,23 @@
 
         <!-- ─── SETTINGS ─── -->
         <section id="page-settings" class="page" aria-label="Settings">
-          <div class="page-header">
-            <h1 class="page-title"><i data-lucide="settings"></i> Settings</h1>
-            <p class="page-subtitle">Configure your region, goals, and data preferences</p>
+          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
+            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
+            <div>
+              <h1 class="page-title"><i data-lucide="settings"></i> Settings</h1>
+              <p class="page-subtitle">Configure your region, goals, and data preferences</p>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h2 class="settings-section-title">My Profile</h2>
+            <div class="settings-card" style="display: flex; align-items: center; gap: 1rem;">
+              <img id="settings-avatar" src="" style="width: 50px; height: 50px; border-radius: 50%; display: none;" />
+              <div>
+                <strong id="settings-name">Name</strong>
+                <div style="font-size: 0.85rem; color: var(--text-secondary);" id="settings-email">email@example.com</div>
+              </div>
+            </div>
           </div>
 
           <form id="form-settings" novalidate>
@@ -686,6 +756,9 @@
                 All data is stored locally in your browser. Nothing is sent to our servers.
               </p>
               <button class="btn-danger" id="btn-clear-data" type="button"><i data-lucide="trash-2"></i> Clear All Carbon Data</button>
+              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                <button class="btn-danger" id="btn-signout-main" type="button" style="width: 100%;">Sign Out</button>
+              </div>
             </div>
           </div>
         </section>

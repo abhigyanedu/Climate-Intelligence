@@ -47,9 +47,13 @@ const App = (() => {
     // Listen for sign-out event
     window.addEventListener("ecomind:signout", () => _showScreen("auth"));
 
+    // Wire back buttons
+    document.querySelectorAll(".btn-back").forEach((btn) => {
+      btn.addEventListener("click", () => navigate("dashboard"));
+    });
+
     // Wire up all interactive elements
     _wireLogActivity();
-    _wireEmailSync();
     _wireSnapScan();
     _wireRoutePlanner();
     _wireSettings();
@@ -116,12 +120,76 @@ const App = (() => {
 
   function _onSignIn(user) {
     _user = user;
-    Storage.saveSettings({ wasLoggedIn: true });
-    _showScreen("app");
-    navigate("dashboard");
+    const settings = Storage.getSettings();
     _updateUserUI(user);
-    // Load insights asynchronously
-    setTimeout(() => _loadInsight(), 1000);
+
+    if (!settings.wasLoggedIn) {
+      _showScreen("onboarding");
+      _startOnboarding();
+    } else {
+      _showScreen("app");
+      navigate("dashboard");
+      setTimeout(() => _loadInsight(), 1000);
+    }
+  }
+
+  function _startOnboarding() {
+    const s1 = document.getElementById("onboarding-step-1");
+    const s2 = document.getElementById("onboarding-step-2");
+    const s3 = document.getElementById("onboarding-step-3");
+
+    const regionSelect = document.getElementById("onboard-region-select");
+    if (regionSelect && regionSelect.children.length === 0) {
+      Object.entries(CarbonEngine.GRID_FACTORS).forEach(([code, { name }]) => {
+        const opt = document.createElement("option");
+        opt.value = code;
+        opt.textContent = `${name} (${code})`;
+        regionSelect.appendChild(opt);
+      });
+      regionSelect.value = "IN";
+    }
+
+    document.getElementById("btn-onboard-next-1")?.addEventListener("click", () => {
+      const key = document.getElementById("onboard-gemini-key")?.value;
+      if (key) {
+        localStorage.setItem("gemini_api_key", key);
+        if (window.ECOMIND_CONFIG) {
+          window.ECOMIND_CONFIG.GEMINI_API_KEY = key;
+          window.ECOMIND_CONFIG.DEMO_MODE = false;
+        }
+      }
+      s1.classList.add("hidden");
+      s2.classList.remove("hidden");
+    });
+
+    document.getElementById("btn-onboard-next-2")?.addEventListener("click", () => {
+      const region = regionSelect?.value || "IN";
+      Storage.saveSettings({ region });
+      CarbonEngine.setRegion(region);
+      s2.classList.add("hidden");
+      s3.classList.remove("hidden");
+    });
+
+    const finishOnboarding = () => {
+      Storage.saveSettings({ wasLoggedIn: true });
+      _showScreen("app");
+      navigate("dashboard");
+      setTimeout(() => _loadInsight(), 1000);
+    };
+
+    document.getElementById("btn-onboard-sync")?.addEventListener("click", async () => {
+      const btn = document.getElementById("btn-onboard-sync");
+      btn.textContent = "Syncing...";
+      btn.disabled = true;
+      try {
+        await window._doGmailSync();
+      } catch (e) {
+        console.warn("Initial sync failed", e);
+      }
+      finishOnboarding();
+    });
+
+    document.getElementById("btn-onboard-skip")?.addEventListener("click", finishOnboarding);
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -156,6 +224,7 @@ const App = (() => {
 
   function _showScreen(screen) {
     document.getElementById("screen-auth")?.classList.toggle("hidden", screen !== "auth");
+    document.getElementById("screen-onboarding")?.classList.toggle("hidden", screen !== "onboarding");
     document.getElementById("screen-app")?.classList.toggle("hidden", screen !== "app");
   }
 
@@ -785,6 +854,12 @@ const App = (() => {
         navigate("dashboard");
       }
     });
+
+    document.getElementById("btn-signout-main")?.addEventListener("click", () => {
+      if (confirm("Warning: Signing out will completely wipe your local carbon log data from this browser. Are you sure you want to proceed?")) {
+        Auth.signOut();
+      }
+    });
   }
 
   // ─────────────────────────────────────────────────────────────
@@ -793,14 +868,32 @@ const App = (() => {
   function _updateUserUI(user) {
     const nameEl = document.getElementById("user-name");
     const avatarEl = document.getElementById("user-avatar");
+    
+    // Settings profile UI
+    const settingsNameEl = document.getElementById("settings-name");
+    const settingsEmailEl = document.getElementById("settings-email");
+    const settingsAvatarEl = document.getElementById("settings-avatar");
+
+    if (settingsNameEl) settingsNameEl.textContent = user.name || user.email || "EcoMind User";
+    if (settingsEmailEl) settingsEmailEl.textContent = user.email || "";
+
     if (nameEl) nameEl.textContent = user.name || user.email;
-    if (avatarEl && user.picture) {
-      avatarEl.src = user.picture;
-      avatarEl.alt = user.name || "User avatar";
-    } else if (avatarEl) {
-      avatarEl.style.display = "none";
-      const initials = document.getElementById("user-initials");
-      if (initials) initials.textContent = (user.name || "U").charAt(0).toUpperCase();
+    
+    if (user.picture) {
+      if (avatarEl) {
+        avatarEl.src = user.picture;
+        avatarEl.alt = user.name || "User avatar";
+      }
+      if (settingsAvatarEl) {
+        settingsAvatarEl.src = user.picture;
+        settingsAvatarEl.style.display = "block";
+      }
+    } else {
+      if (avatarEl) {
+        avatarEl.style.display = "none";
+        const initials = document.getElementById("user-initials");
+        if (initials) initials.textContent = (user.name || "U").charAt(0).toUpperCase();
+      }
     }
 
     if (user.isDemoUser) {
@@ -859,9 +952,10 @@ const App = (() => {
     });
   }
 
-  return { init, navigate };
+  return { init, navigate, doGmailSync: _doGmailSync };
 })();
 
 // Boot when DOM is ready
 document.addEventListener("DOMContentLoaded", () => App.init());
 window.App = App;
+window._doGmailSync = App.doGmailSync;
