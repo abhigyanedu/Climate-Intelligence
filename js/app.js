@@ -576,11 +576,17 @@ const App = (() => {
         loadingEl?.classList.add("hidden");
 
         const selectedCO2 = CarbonEngine.calcTransport(selectedMode, result.distanceKm);
+        const treesSaved = result.getTreeSavings ? result.getTreeSavings(selectedCO2) : 0;
+
+        let savingsHtml = `<div class="route-saving">You save <strong>${result.maxSaving.toFixed(2)} kg CO₂</strong> vs worst option</div>`;
+        if (treesSaved > 0) {
+          savingsHtml += `<div class="route-saving" style="color: var(--accent); margin-top:0.25rem;">🌳 Equivalent to planting <strong>${treesSaved} trees</strong> (monthly)</div>`;
+        }
 
         resultEl.innerHTML = `
           <div class="route-result-header">
             <div class="route-distance">📍 ${result.distanceKm} km</div>
-            <div class="route-saving">You save <strong>${result.maxSaving.toFixed(2)} kg CO₂</strong> vs worst option</div>
+            ${savingsHtml}
           </div>
           <div class="route-selected">
             Your choice (${selectedMode.replace(/_/g, " ")}): <strong>${selectedCO2.toFixed(3)} kg CO₂e</strong>

@@ -18,8 +18,20 @@ const MapsCarbon = (() => {
       console.info("[MapsCarbon] Demo mode");
       return;
     }
+
     if (window.google?.maps) {
       _directionsService = new window.google.maps.DirectionsService();
+    } else {
+      // Dynamically load the Maps script
+      const script = document.createElement("script");
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${cfg.MAPS_API_KEY}&libraries=places`;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        _directionsService = new window.google.maps.DirectionsService();
+        console.info("[MapsCarbon] Maps API loaded dynamically");
+      };
+      document.head.appendChild(script);
     }
   }
 
@@ -78,6 +90,12 @@ const MapsCarbon = (() => {
             destinationAddress: leg.end_address,
             comparison,
             maxSaving: parseFloat((maxCO2 - minCO2).toFixed(2)),
+            getTreeSavings: (selectedModeCO2) => {
+              const carCO2 = comparison.find(m => m.mode === 'petrol_car_solo')?.co2 || maxCO2;
+              const savedKg = Math.max(0, carCO2 - selectedModeCO2);
+              // 1 tree absorbs ~22kg of CO2 per year. 
+              return parseFloat((savedKg / 22).toFixed(3));
+            }
           });
         }
       );
@@ -100,6 +118,11 @@ const MapsCarbon = (() => {
       destinationAddress: destination || "Whitefield, Bengaluru",
       comparison,
       maxSaving: parseFloat((maxCO2 - minCO2).toFixed(2)),
+      getTreeSavings: (selectedModeCO2) => {
+        const carCO2 = comparison.find(m => m.mode === 'petrol_car_solo')?.co2 || maxCO2;
+        const savedKg = Math.max(0, carCO2 - selectedModeCO2);
+        return parseFloat((savedKg / 22).toFixed(3));
+      }
     };
   }
 
