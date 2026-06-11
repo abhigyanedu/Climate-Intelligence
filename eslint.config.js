@@ -8,6 +8,7 @@ module.exports = [
       globals: {
         ...globals.browser,
         ...globals.jest,
+        ...globals.node,
         CarbonEngine: "readonly",
         Storage: "readonly",
         Auth: "readonly",
