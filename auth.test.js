@@ -1,8 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-const fs = require("fs");
-const path = require("path");
 const Auth = require("./js/auth.js");
 
 describe("Auth Module", () => {

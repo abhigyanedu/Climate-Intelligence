@@ -1,8 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-const fs = require("fs");
-const path = require("path");
 const CarbonEngine = require("./js/carbon-engine.js");
 
 describe("CarbonEngine", () => {

@@ -1,8 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-const fs = require("fs");
-const path = require("path");
 const GmailParser = require("./js/gmail-parser.js");
 
 describe("GmailParser Module", () => {

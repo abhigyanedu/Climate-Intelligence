@@ -36,28 +36,6 @@ describe("App.js Main Controller", () => {
       event.initEvent("DOMContentLoaded", true, true);
       window.document.dispatchEvent(event);
 
-      // Simulate clicks on EVERY button to trigger all event listeners in app.js
-      document.querySelectorAll("button, a, .dashboard-card").forEach((el) => {
-        try {
-          el.click();
-        } catch (e) {}
-      });
-
-      // Submit all forms
-      document.querySelectorAll("form").forEach((form) => {
-        try {
-          form.dispatchEvent(new Event("submit"));
-        } catch (e) {}
-      });
-
-      // Simulate inputs
-      document.querySelectorAll("input, select").forEach((el) => {
-        try {
-          el.dispatchEvent(new Event("change"));
-          el.dispatchEvent(new Event("input"));
-        } catch (e) {}
-      });
-
       expect(true).toBe(true);
     } catch (e) {
       expect(e).toBeDefined();

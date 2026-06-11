@@ -1,8 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-const fs = require("fs");
-const path = require("path");
 const Storage = require("./js/storage.js");
 
 // Mock localStorage

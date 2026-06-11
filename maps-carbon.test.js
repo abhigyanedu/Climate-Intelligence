@@ -1,8 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-const fs = require("fs");
-const path = require("path");
 const MapsCarbon = require("./js/maps-carbon.js");
 
 describe("MapsCarbon Module", () => {

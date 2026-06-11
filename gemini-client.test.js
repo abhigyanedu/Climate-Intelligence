@@ -1,8 +1,6 @@
 /**
  * @jest-environment jsdom
  */
-const fs = require("fs");
-const path = require("path");
 const GeminiClient = require("./js/gemini-client.js");
 
 describe("GeminiClient Module", () => {
