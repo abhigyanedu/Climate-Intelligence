@@ -1,0 +1,21 @@
+# Dependency files
+node_modules/
+
+# API Keys - NEVER commit this
+config.js
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# Build artifacts
+dist/
+.cache/
