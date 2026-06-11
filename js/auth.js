@@ -154,5 +154,10 @@ const Auth = (() => {
 
   return { init, signIn, signOut, getAccessToken, getUser, isSignedIn };
 })();
-
-window.Auth = Auth;
+// Make available globally
+if (typeof window !== "undefined") {
+  window.Auth = Auth;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = Auth;
+}

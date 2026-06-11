@@ -2,7 +2,7 @@
    EcoMind Premium Wellness/Editorial CSS
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap");
 
 :root {
   /* Elegant Green Palette */
@@ -10,28 +10,28 @@
   --surface: rgba(255, 255, 255, 0.7);
   --surface-solid: #ffffff;
   --surface-hover: rgba(255, 255, 255, 0.9);
-  
-  --text-primary: #1A362D; /* Deep forest green */
-  --text-secondary: #5C7A6D; /* Sage gray */
-  --text-muted: #8FAEA0;
-  
-  --accent: #2B7A5F; /* Elegant emerald/sage */
-  --accent-light: #E2EFE9;
-  --accent-hover: #1F634B;
-  
-  --danger: #D96666;
-  --warning: #DE994A;
-  
+
+  --text-primary: #1a362d; /* Deep forest green */
+  --text-secondary: #5c7a6d; /* Sage gray */
+  --text-muted: #8faea0;
+
+  --accent: #2b7a5f; /* Elegant emerald/sage */
+  --accent-light: #e2efe9;
+  --accent-hover: #1f634b;
+
+  --danger: #d96666;
+  --warning: #de994a;
+
   --shadow-soft: 0 16px 40px rgba(26, 54, 45, 0.06);
   --shadow-sm: 0 4px 12px rgba(26, 54, 45, 0.04);
-  
+
   --radius-lg: 32px;
   --radius-md: 20px;
   --radius-sm: 12px;
-  
-  --font-heading: 'Playfair Display', serif;
-  --font-body: 'Outfit', sans-serif;
-  
+
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Outfit", sans-serif;
+
   --nav-height: 80px;
 }
 
@@ -51,7 +51,12 @@ body {
   background-attachment: fixed;
 }
 
-h1, h2, h3, h4, .auth-title, .page-title {
+h1,
+h2,
+h3,
+h4,
+.auth-title,
+.page-title {
   font-family: var(--font-heading);
   font-weight: 500;
   color: var(--text-primary);
@@ -66,7 +71,9 @@ button {
 }
 
 /* ─── UTILITIES ─── */
-.hidden { display: none !important; }
+.hidden {
+  display: none !important;
+}
 
 /* ─── APP LAYOUT ─── */
 .app-layout {
@@ -162,7 +169,7 @@ button {
   border-radius: 40px;
   box-shadow: var(--shadow-soft);
   z-index: 100;
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .nav-section-label {
@@ -226,8 +233,14 @@ button {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .page-header {
@@ -253,7 +266,7 @@ button {
   -webkit-backdrop-filter: blur(20px);
   border-radius: var(--radius-lg);
   padding: 1.5rem;
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   box-shadow: var(--shadow-soft);
   margin-bottom: 1.5rem;
 }
@@ -288,7 +301,7 @@ button {
   border-radius: 100px;
   font-weight: 500;
   box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   transition: all 0.2s;
 }
 .btn-secondary:hover {
@@ -332,7 +345,7 @@ button {
   padding: 2.5rem 1.5rem;
   text-align: center;
   box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(255,255,255,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   margin-bottom: 1.5rem;
 }
 .score-ring-wrap {
@@ -409,7 +422,7 @@ button {
 }
 .goal-bar-track {
   height: 8px;
-  background: rgba(255,255,255,0.5);
+  background: rgba(255, 255, 255, 0.5);
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 0.5rem;
@@ -458,16 +471,17 @@ input[type="number"],
 select {
   width: 100%;
   background: var(--surface-solid);
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   color: var(--text-primary);
   padding: 1rem;
   border-radius: var(--radius-sm);
   font-size: 1rem;
   font-family: var(--font-body);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
   transition: border-color 0.2s;
 }
-input:focus, select:focus {
+input:focus,
+select:focus {
   outline: none;
   border-color: var(--accent);
 }
@@ -486,7 +500,9 @@ input:focus, select:focus {
   margin-bottom: 1rem;
   scrollbar-width: none;
 }
-.log-tabs::-webkit-scrollbar { display: none; }
+.log-tabs::-webkit-scrollbar {
+  display: none;
+}
 .log-tab {
   padding: 0.75rem 1.25rem;
   background: var(--surface-solid);
@@ -500,8 +516,12 @@ input:focus, select:focus {
   background: var(--accent);
   color: white;
 }
-.log-form-panel { display: none; }
-.log-form-panel.active { display: block; }
+.log-form-panel {
+  display: none;
+}
+.log-form-panel.active {
+  display: block;
+}
 
 /* ─── LOG ENTRIES ─── */
 .log-section-title {
@@ -595,7 +615,7 @@ input:focus, select:focus {
   margin-bottom: 1.5rem;
 }
 .scan-dropzone:hover {
-  background: rgba(255,255,255,0.9);
+  background: rgba(255, 255, 255, 0.9);
 }
 .scan-dropzone-icon {
   font-size: 2.5rem;
@@ -658,7 +678,7 @@ input:focus, select:focus {
   width: 100%;
   text-align: center;
   box-shadow: var(--shadow-soft);
-  border: 1px solid rgba(255,255,255,0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }
 .auth-logo {
   font-size: 3.5rem;
@@ -743,7 +763,11 @@ input:focus, select:focus {
   animation: spin 1s linear infinite;
   margin: 0 auto 1rem;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 #toast {
   position: fixed;
@@ -756,7 +780,7 @@ input:focus, select:focus {
   border-radius: 100px;
   font-weight: 500;
   font-size: 0.9rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 1000;
 }
@@ -785,7 +809,7 @@ input:focus, select:focus {
 }
 .modal-content {
   background: var(--surface-solid);
-  border: 1px solid rgba(255,255,255,0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: var(--radius-lg);
   padding: 2rem;
   width: 90%;

@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for storage.js</title>
+    <title>Code coverage report for auth.js</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="prettify.css" />
     <link rel="stylesheet" href="base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="index.html">All files</a> storage.js</h1>
+        <h1><a href="index.html">All files</a> auth.js</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.59% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>75/81</span>
+                <span class='fraction'>31/62</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75.6% </span>
+                <span class="strong">32.35% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>31/41</span>
+                <span class='fraction'>11/34</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">61.53% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>8/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.24% </span>
+                <span class="strong">52.54% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>69/74</span>
+                <span class='fraction'>31/59</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -226,82 +226,54 @@
 <a name='L161'></a><a href='#L161'>161</a>
 <a name='L162'></a><a href='#L162'>162</a>
 <a name='L163'></a><a href='#L163'>163</a>
-<a name='L164'></a><a href='#L164'>164</a>
-<a name='L165'></a><a href='#L165'>165</a>
-<a name='L166'></a><a href='#L166'>166</a>
-<a name='L167'></a><a href='#L167'>167</a>
-<a name='L168'></a><a href='#L168'>168</a>
-<a name='L169'></a><a href='#L169'>169</a>
-<a name='L170'></a><a href='#L170'>170</a>
-<a name='L171'></a><a href='#L171'>171</a>
-<a name='L172'></a><a href='#L172'>172</a>
-<a name='L173'></a><a href='#L173'>173</a>
-<a name='L174'></a><a href='#L174'>174</a>
-<a name='L175'></a><a href='#L175'>175</a>
-<a name='L176'></a><a href='#L176'>176</a>
-<a name='L177'></a><a href='#L177'>177</a>
-<a name='L178'></a><a href='#L178'>178</a>
-<a name='L179'></a><a href='#L179'>179</a>
-<a name='L180'></a><a href='#L180'>180</a>
-<a name='L181'></a><a href='#L181'>181</a>
-<a name='L182'></a><a href='#L182'>182</a>
-<a name='L183'></a><a href='#L183'>183</a>
-<a name='L184'></a><a href='#L184'>184</a>
-<a name='L185'></a><a href='#L185'>185</a>
-<a name='L186'></a><a href='#L186'>186</a>
-<a name='L187'></a><a href='#L187'>187</a>
-<a name='L188'></a><a href='#L188'>188</a>
-<a name='L189'></a><a href='#L189'>189</a>
-<a name='L190'></a><a href='#L190'>190</a>
-<a name='L191'></a><a href='#L191'>191</a>
-<a name='L192'></a><a href='#L192'>192</a>
-<a name='L193'></a><a href='#L193'>193</a>
-<a name='L194'></a><a href='#L194'>194</a>
-<a name='L195'></a><a href='#L195'>195</a>
-<a name='L196'></a><a href='#L196'>196</a>
-<a name='L197'></a><a href='#L197'>197</a>
-<a name='L198'></a><a href='#L198'>198</a>
-<a name='L199'></a><a href='#L199'>199</a>
-<a name='L200'></a><a href='#L200'>200</a>
-<a name='L201'></a><a href='#L201'>201</a>
-<a name='L202'></a><a href='#L202'>202</a>
-<a name='L203'></a><a href='#L203'>203</a>
-<a name='L204'></a><a href='#L204'>204</a>
-<a name='L205'></a><a href='#L205'>205</a>
-<a name='L206'></a><a href='#L206'>206</a>
-<a name='L207'></a><a href='#L207'>207</a>
-<a name='L208'></a><a href='#L208'>208</a>
-<a name='L209'></a><a href='#L209'>209</a>
-<a name='L210'></a><a href='#L210'>210</a>
-<a name='L211'></a><a href='#L211'>211</a>
-<a name='L212'></a><a href='#L212'>212</a>
-<a name='L213'></a><a href='#L213'>213</a>
-<a name='L214'></a><a href='#L214'>214</a>
-<a name='L215'></a><a href='#L215'>215</a>
-<a name='L216'></a><a href='#L216'>216</a>
-<a name='L217'></a><a href='#L217'>217</a>
-<a name='L218'></a><a href='#L218'>218</a>
-<a name='L219'></a><a href='#L219'>219</a>
-<a name='L220'></a><a href='#L220'>220</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L164'></a><a href='#L164'>164</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">174x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -310,10 +282,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">158x</span>
-<span class="cline-any cline-yes">158x</span>
-<span class="cline-any cline-yes">158x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -322,20 +304,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -343,15 +319,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -359,20 +327,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">121x</span>
-<span class="cline-any cline-yes">121x</span>
-<span class="cline-any cline-yes">116x</span>
-<span class="cline-any cline-yes">299x</span>
-<span class="cline-any cline-yes">299x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -380,345 +341,216 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-yes">37x</span>
-<span class="cline-any cline-yes">37x</span>
-<span class="cline-any cline-yes">37x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">98x</span>
-<span class="cline-any cline-yes">98x</span>
-<span class="cline-any cline-yes">98x</span>
-<span class="cline-any cline-yes">98x</span>
-<span class="cline-any cline-yes">98x</span>
-<span class="cline-any cline-yes">98x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">26x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
- * EcoMind — Storage Module
- * =========================
- * Unified read/write layer over localStorage.
- * All EcoMind data lives under the 'ecomind_' namespace.
+ * EcoMind — Google Auth Module
+ * =============================
+ * Uses Google Identity Services (GIS) for OAuth 2.0.
+ * Supports scopes: Gmail read-only, user profile.
  */
 &nbsp;
-const Storage = (() =&gt; {
-  const NS = "ecomind_";
+const Auth = (() =&gt; {
+  const SCOPES = [
+    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/userinfo.profile",
+    "https://www.googleapis.com/auth/userinfo.email",
+  ].join(" ");
 &nbsp;
-  function _key(k) {
-    return NS + k;
-  }
+  let _tokenClient = null;
+  let _accessToken = null;
+  let _userProfile = null;
+  let _onAuthCallback = null;
 &nbsp;
   /**
-   * Save a value (auto-serialized to JSON).
+   * Initialize the Google Identity Services token client.
+   * Must be called after the GIS script has loaded.
    */
-  function set(key, value) {
-    try {
-      localStorage.setItem(_key(key), JSON.stringify(value));
-    } catch (e) {
-<span class="cstat-no" title="statement not covered" >      console.warn("[Storage] Write failed:", e);</span>
+  function init(onAuthSuccess) {
+    _onAuthCallback = onAuthSuccess;
+&nbsp;
+    const cfg = window.ECOMIND_CONFIG;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (!cfg || <span class="branch-1 cbranch-no" title="branch not covered" >cfg.DEMO_MODE)</span> {
+      console.info("[Auth] Demo mode — skipping GIS init");
+      return;
     }
-  }
 &nbsp;
-  /**
-   * Load a value (auto-deserialized).
-   */
-  function get(key, defaultValue = null) {
-    try {
-      const raw = localStorage.getItem(_key(key));
-      return raw !== null ? JSON.parse(raw) : defaultValue;
-    } catch {
-<span class="cstat-no" title="statement not covered" >      return defaultValue;</span>
-    }
-  }
-&nbsp;
-  /**
-   * Remove a key.
-   */
-  function remove(key) {
-    localStorage.removeItem(_key(key));
-  }
-&nbsp;
-  /**
-   * Clear all EcoMind data (or a category).
-   */
-  function clear(category) {
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (category) {
-<span class="cstat-no" title="statement not covered" >      remove(category);</span>
+<span class="cstat-no" title="statement not covered" >    if (!window.google?.accounts?.oauth2) {</span>
+<span class="cstat-no" title="statement not covered" >      console.warn("[Auth] GIS not loaded yet, will initialize on sign in");</span>
 <span class="cstat-no" title="statement not covered" >      return;</span>
     }
-    Object.keys(localStorage)
-      .filter((k) =&gt; k.startsWith(NS))
-      .forEach((k) =&gt; localStorage.removeItem(k));
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    _initTokenClient(cfg);</span>
   }
 &nbsp;
-  // ─────────────────────────────────────────────────────────────
-  // CARBON LOG HELPERS
-  // ─────────────────────────────────────────────────────────────
+  function <span class="fstat-no" title="function not covered" >_initTokenClient(</span>cfg) {
+<span class="cstat-no" title="statement not covered" >    if (_tokenClient) <span class="cstat-no" title="statement not covered" >return true;</span></span>
+<span class="cstat-no" title="statement not covered" >    if (!window.google?.accounts?.oauth2) <span class="cstat-no" title="statement not covered" >return false;</span></span>
 &nbsp;
-  /**
-   * Add a carbon entry to the log.
-   * @param {{ category, source, co2, date, details }} entry
-   */
-  function addEntry(entry) {
-    const log = get("log", []);
-    const newEntry = {
-      id: Date.now() + Math.random().toString(36).slice(2),
-      timestamp: new Date().toISOString(),
-      date: entry.date || new Date().toISOString().slice(0, 10),
-      category: entry.category, // transport|food_delivery|quick_commerce|ecommerce|electricity|flight|digital|accommodation|manual
-      source: entry.source, // "Gmail - Zomato" | "Manual" | "Gemini Vision" | "Maps" etc.
-      co2: parseFloat(entry.co2) || <span class="branch-1 cbranch-no" title="branch not covered" >0,</span>
-      details: entry.details || {},
-    };
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (isNaN(newEntry.co2) || newEntry.co2 &lt; 0) <span class="cstat-no" title="statement not covered" >newEntry.co2 = 0;</span>
-    log.push(newEntry);
-    set("log", log);
-    return newEntry;
-  }
-&nbsp;
-  /**
-   * Get all entries, optionally filtered by date range.
-   */
-  function getEntries({ from, to } = {}) {
-    const log = get("log", []);
-    if (!from &amp;&amp; !to) return log;
-    return log.filter((e) =&gt; {
-      const d = e.date;
-      return (!from || d &gt;= from) &amp;&amp; (!to || d &lt;= to);
+<span class="cstat-no" title="statement not covered" >    _tokenClient = window.google.accounts.oauth2.initTokenClient({</span>
+      client_id: cfg.GOOGLE_CLIENT_ID,
+      scope: SCOPES,
+      callback: _handleTokenResponse,
     });
+<span class="cstat-no" title="statement not covered" >    return true;</span>
   }
 &nbsp;
   /**
-   * Delete a log entry by ID.
+   * Trigger the OAuth popup flow.
    */
-  function deleteEntry(id) {
-    const log = get("log", []).filter((e) =&gt; e.id !== id);
-    set("log", log);
-  }
+  function signIn() {
+    const cfg = window.ECOMIND_CONFIG;
 &nbsp;
-  /**
-   * Summarize CO₂ by category for a date range.
-   */
-  function summarize({ from, to } = {}) {
-    const entries = getEntries({ from, to });
-    const summary = {};
-    let total = 0;
-    for (const e of entries) {
-      const val = parseFloat(e.co2) || <span class="branch-1 cbranch-no" title="branch not covered" >0;</span>
-      summary[e.category] = (summary[e.category] || 0) + val;
-      total += val;
+    // Demo mode — inject fake user
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (!cfg || <span class="branch-1 cbranch-no" title="branch not covered" >cfg.DEMO_MODE)</span> {
+      _simulateDemoLogin();
+      return;
     }
-    return { byCategory: summary, total: parseFloat(total.toFixed(2)), count: entries.length };
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (!_tokenClient) {</span>
+<span class="cstat-no" title="statement not covered" >      if (!_initTokenClient(cfg)) {</span>
+<span class="cstat-no" title="statement not covered" >        console.error("[Auth] GIS script still not loaded or blocked by browser.");</span>
+<span class="cstat-no" title="statement not covered" >        return;</span>
+      }
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    _tokenClient.requestAccessToken({ prompt: "consent" });</span>
   }
 &nbsp;
   /**
-   * Get 7-day daily totals for chart.
+   * Sign out — revoke token and clear state.
    */
-  function getLast7Days() {
-    const days = [];
-    for (let i = 6; i &gt;= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      const dateStr = d.toISOString().slice(0, 10);
-      const entries = getEntries({ from: dateStr, to: dateStr });
-      const total = entries.reduce((sum, e) =&gt; sum + e.co2, 0);
-      days.push({
-        date: dateStr,
-        label: d.toLocaleDateString("en", { weekday: "short" }),
-        co2: parseFloat(total.toFixed(2)),
+  function signOut() {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (_accessToken &amp;&amp; window.google?.accounts?.oauth2) {
+<span class="cstat-no" title="statement not covered" >      window.google.accounts.oauth2.revoke(_accessToken, <span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        console.info("[Auth] Token revoked");</span>
       });
     }
-    return days;
+    _accessToken = null;
+    _userProfile = null;
+    Storage.clear();
+    window.dispatchEvent(new CustomEvent("ecomind:signout"));
   }
 &nbsp;
   /**
-   * Get 4-week totals for monthly trend.
+   * Get current access token (null if not signed in).
    */
-  function getLast4Weeks() {
-    const weeks = [];
-    for (let w = 3; w &gt;= 0; w--) {
-      const to = new Date();
-      to.setDate(to.getDate() - w * 7);
-      const from = new Date(to);
-      from.setDate(from.getDate() - 6);
-      const fromStr = from.toISOString().slice(0, 10);
-      const toStr = to.toISOString().slice(0, 10);
-      const entries = getEntries({ from: fromStr, to: toStr });
-      const total = entries.reduce((sum, e) =&gt; sum + e.co2, 0);
-      weeks.push({ label: `W${4 - w}`, co2: parseFloat(total.toFixed(2)) });
+  function getAccessToken() {
+    return _accessToken;
+  }
+&nbsp;
+  /**
+   * Get user profile info.
+   */
+  function getUser() {
+    return _userProfile;
+  }
+&nbsp;
+  /**
+   * Check if user is currently signed in.
+   */
+  function isSignedIn() {
+    return !!_accessToken;
+  }
+&nbsp;
+  // ─────────────────────────────────────────────────────────────
+  // PRIVATE
+  // ─────────────────────────────────────────────────────────────
+&nbsp;
+  async function <span class="fstat-no" title="function not covered" >_handleTokenResponse(</span>response) {
+<span class="cstat-no" title="statement not covered" >    if (response.error) {</span>
+<span class="cstat-no" title="statement not covered" >      console.error("[Auth] OAuth error:", response.error);</span>
+<span class="cstat-no" title="statement not covered" >      return;</span>
     }
-    return weeks;
-  }
 &nbsp;
-  // ─────────────────────────────────────────────────────────────
-  // USER SETTINGS
-  // ─────────────────────────────────────────────────────────────
+<span class="cstat-no" title="statement not covered" >    _accessToken = response.access_token;</span>
+<span class="cstat-no" title="statement not covered" >    await _fetchUserProfile();</span>
 &nbsp;
-  function getSettings() {
-    return get("settings", {
-      region: "IN",
-      isGlobalMode: false,
-      includeRFI: true,
-      monthlyGoal: 100, // kg CO₂ per month
-      streakDays: 0,
-      lastActiveDate: null,
-      gmailSynced: false,
-      theme: "dark",
-    });
-  }
-&nbsp;
-  function saveSettings(patch) {
-    const current = getSettings();
-    set("settings", { ...current, ...patch });
-  }
-&nbsp;
-  // ─────────────────────────────────────────────────────────────
-  // STREAK
-  // ─────────────────────────────────────────────────────────────
-&nbsp;
-  function updateStreak() {
-    const settings = getSettings();
-    const today = new Date().toISOString().slice(0, 10);
-    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
-&nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (settings.lastActiveDate === yesterday) {
-<span class="cstat-no" title="statement not covered" >      saveSettings({ streakDays: (settings.streakDays || 0) + 1, lastActiveDate: today });</span>
-    } else <span class="missing-if-branch" title="else path not taken" >E</span>if (settings.lastActiveDate !== today) {
-      saveSettings({ streakDays: 1, lastActiveDate: today });
+<span class="cstat-no" title="statement not covered" >    if (_onAuthCallback) {</span>
+<span class="cstat-no" title="statement not covered" >      _onAuthCallback(_userProfile);</span>
     }
   }
 &nbsp;
-  return {
-    set,
-    get,
-    remove,
-    clear,
-    addEntry,
-    getEntries,
-    deleteEntry,
-    summarize,
-    getLast7Days,
-    getLast4Weeks,
-    getSettings,
-    saveSettings,
-    updateStreak,
-  };
+  async function <span class="fstat-no" title="function not covered" >_fetchUserProfile(</span>) {
+<span class="cstat-no" title="statement not covered" >    try {</span>
+      const res = <span class="cstat-no" title="statement not covered" >await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {</span>
+        headers: { Authorization: `Bearer ${_accessToken}` },
+      });
+<span class="cstat-no" title="statement not covered" >      _userProfile = await res.json();</span>
+<span class="cstat-no" title="statement not covered" >      console.info("[Auth] Signed in as:", _userProfile.email);</span>
+    } catch (e) {
+<span class="cstat-no" title="statement not covered" >      console.error("[Auth] Failed to fetch profile:", e);</span>
+    }
+  }
+&nbsp;
+  function _simulateDemoLogin() {
+    _accessToken = "DEMO_TOKEN";
+    _userProfile = {
+      id: "demo_user",
+      name: "Demo User",
+      email: "demo@ecomind.app",
+      picture: null,
+      isDemoUser: true,
+    };
+    setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >      if (_onAuthCallback) <span class="cstat-no" title="statement not covered" >_onAuthCallback(_userProfile);</span></span>
+    }, 500);
+  }
+&nbsp;
+  return { init, signIn, signOut, getAccessToken, getUser, isSignedIn };
 })();
-&nbsp;
 // Make available globally
 <span class="missing-if-branch" title="else path not taken" >E</span>if (typeof window !== "undefined") {
-  window.Storage = Storage;
+  window.Auth = Auth;
 }
-// Export for CommonJS (Jest Testing)
 <span class="missing-if-branch" title="else path not taken" >E</span>if (typeof module !== "undefined" &amp;&amp; module.exports) {
-  module.exports = Storage;
+  module.exports = Auth;
 }
 &nbsp;</pre></td></tr></table></pre>
 

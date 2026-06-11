@@ -132,5 +132,10 @@ const MapsCarbon = (() => {
 
   return { init, setupAutocomplete, calcRouteCO2 };
 })();
-
-window.MapsCarbon = MapsCarbon;
+// Make available globally
+if (typeof window !== "undefined") {
+  window.MapsCarbon = MapsCarbon;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = MapsCarbon;
+}

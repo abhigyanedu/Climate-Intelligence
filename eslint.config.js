@@ -20,15 +20,15 @@ module.exports = [
         getAnalytics: "readonly",
         logEvent: "readonly",
         MapsCarbon: "readonly",
-        Chart: "readonly"
+        Chart: "readonly",
       },
       ecmaVersion: "latest",
-      sourceType: "script"
+      sourceType: "script",
     },
     rules: {
-      "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
-      "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
-      "no-redeclare": "off"
-    }
-  }
+      "no-unused-vars": ["warn", { argsIgnorePattern: "^_", varsIgnorePattern: "^_" }],
+      "no-console": ["warn", { allow: ["warn", "error", "info"] }],
+      "no-redeclare": "off",
+    },
+  },
 ];

@@ -341,7 +341,7 @@ const App = (() => {
 
       insightEl.textContent = insight;
       insightEl.classList.remove("loading");
-    } catch (e) {
+    } catch {
       insightEl.textContent = "Connect your Gmail or log activities to get personalized insights.";
       insightEl.classList.remove("loading");
     }

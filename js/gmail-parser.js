@@ -375,5 +375,10 @@ const GmailParser = (() => {
 
   return { sync, CATEGORY_DEFAULTS };
 })();
-
-window.GmailParser = GmailParser;
+// Make available globally
+if (typeof window !== "undefined") {
+  window.GmailParser = GmailParser;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = GmailParser;
+}

@@ -264,5 +264,10 @@ const Charts = (() => {
     CATEGORY_LABELS,
   };
 })();
-
-window.Charts = Charts;
+// Make available globally
+if (typeof window !== "undefined") {
+  window.Charts = Charts;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = Charts;
+}

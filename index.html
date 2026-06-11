@@ -1,841 +1,1138 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EcoMind — Personal Carbon Intelligence</title>
-  <meta name="description" content="Track, understand, and reduce your carbon footprint using AI insights from your Gmail, shopping, travel, and home energy data." />
-  <meta name="theme-color" content="#0a0e1a" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EcoMind — Personal Carbon Intelligence</title>
+    <meta
+      name="description"
+      content="Track, understand, and reduce your carbon footprint using AI insights from your Gmail, shopping, travel, and home energy data."
+    />
+    <meta name="theme-color" content="#0a0e1a" />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="EcoMind — Carbon Intelligence" />
-  <meta property="og:description" content="AI-powered carbon footprint tracker using your real digital data." />
-  <meta property="og:type" content="website" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="EcoMind — Carbon Intelligence" />
+    <meta
+      property="og:description"
+      content="AI-powered carbon footprint tracker using your real digital data."
+    />
+    <meta property="og:type" content="website" />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="css/styles.css" />
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css" />
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-  <!-- Google Identity Services (loads async) -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  
-  <!-- Firebase (Optional / Hackathon Edge Cases) -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
+    <!-- Google Identity Services (loads async) -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-    // Global Error Boundary
-    window.addEventListener("error", (event) => {
-      console.error("Global Error Caught:", event.error);
-      const toast = document.getElementById("toast");
-      if (toast) {
-        toast.textContent = "An unexpected error occurred.";
-        toast.classList.add("show");
-        setTimeout(() => toast.classList.remove("show"), 3000);
-      }
-      if (window._firebaseAnalytics) {
-        logEvent(window._firebaseAnalytics, "exception", { description: event.message, fatal: true });
-      }
-    });
+    <!-- Firebase (Optional / Hackathon Edge Cases) -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import {
+        getAnalytics,
+        logEvent,
+      } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js";
 
-    window.addEventListener("unhandledrejection", (event) => {
-      console.warn("Unhandled Promise Rejection:", event.reason);
-      if (window._firebaseAnalytics) {
-        logEvent(window._firebaseAnalytics, "exception", { description: event.reason?.message || "Promise Rejection", fatal: false });
-      }
-    });
-
-    // We only init Firebase if the config is provided
-    document.addEventListener("DOMContentLoaded", () => {
-      if (window.ECOMIND_CONFIG?.FIREBASE_CONFIG) {
-        try {
-          const app = initializeApp(window.ECOMIND_CONFIG.FIREBASE_CONFIG);
-          window._firebaseAnalytics = getAnalytics(app);
-          logEvent(window._firebaseAnalytics, "app_open");
-        } catch (e) {
-          console.warn("Firebase init failed:", e);
+      // Global Error Boundary
+      window.addEventListener("error", (event) => {
+        console.error("Global Error Caught:", event.error);
+        const toast = document.getElementById("toast");
+        if (toast) {
+          toast.textContent = "An unexpected error occurred.";
+          toast.classList.add("show");
+          setTimeout(() => toast.classList.remove("show"), 3000);
         }
-      }
-    });
-  </script>
-</head>
-<body>
-
-  <!-- ═══════════════════════════════════════════════════════
-       AUTH SCREEN
-  ════════════════════════════════════════════════════════ -->
-  <div id="screen-auth">
-    <div class="auth-card">
-      <div class="auth-logo"><i data-lucide="globe"></i></div>
-      <h1 class="auth-title">EcoMind</h1>
-      <p class="auth-subtitle">
-        Your AI carbon intelligence platform.<br/>
-        Track your footprint from emails, receipts, and more.
-      </p>
-
-      <div class="auth-features" role="list">
-        <div class="auth-feature" role="listitem">
-          <div class="auth-feature-icon"><i data-lucide="mail"></i></div>
-          <div class="auth-feature-label">Gmail Auto-Detect</div>
-          <div>Zomato, Swiggy, flights, bills</div>
-        </div>
-        <div class="auth-feature" role="listitem">
-          <div class="auth-feature-icon"><i data-lucide="bot"></i></div>
-          <div class="auth-feature-label">Gemini AI</div>
-          <div>Receipt & bill analysis</div>
-        </div>
-        <div class="auth-feature" role="listitem">
-          <div class="auth-feature-icon"><i data-lucide="map"></i></div>
-          <div class="auth-feature-label">Route Carbon</div>
-          <div>Compare transport modes</div>
-        </div>
-        <div class="auth-feature" role="listitem">
-          <div class="auth-feature-icon"><i data-lucide="target"></i></div>
-          <div class="auth-feature-label">AI Goals</div>
-          <div>Personalized reduction plans</div>
-        </div>
-      </div>
-
-      <!-- Google Sign-In -->
-      <button class="btn-google btn-signin" type="button" aria-label="Sign in with Google">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-        </svg>
-        Sign in with Google
-      </button>
-
-      <!-- Demo Mode -->
-      <button class="btn-demo-mode" id="btn-demo" type="button">
-        <i data-lucide="search"></i> Try Demo Mode (no sign-in needed)
-      </button>
-
-      <p class="auth-disclaimer">
-        Gmail access is read-only. Your data stays on your device.<br/>
-        We never store or share your emails.
-      </p>
-    </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════
-       ONBOARDING SCREEN
-  ════════════════════════════════════════════════════════ -->
-  <div id="screen-onboarding" class="hidden">
-    <div class="auth-card" style="max-width: 500px; text-align: left;">
-      <h1 class="auth-title" style="text-align: center; margin-bottom: 0.5rem;">Welcome to EcoMind</h1>
-      <p class="auth-subtitle" style="text-align: center; margin-bottom: 2rem;">Let's get your baseline set up.</p>
-
-      <div id="onboarding-step-1">
-        <h3>Step 1: Setup Gemini AI</h3>
-        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">EcoMind uses Gemini to analyze your receipts and electricity bills securely in your browser.</p>
-        <div class="form-group">
-          <label class="form-label">Google Gemini API Key (Required)</label>
-          <input type="password" id="onboard-gemini-key" placeholder="AI Studio Key..." />
-        </div>
-        <button class="btn-primary w-full" id="btn-onboard-next-1">Next →</button>
-      </div>
-
-      <div id="onboarding-step-2" class="hidden">
-        <h3>Step 2: Electricity Grid Baseline</h3>
-        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Where do you live? We need this to calculate accurate CO₂ from your home energy and appliance usage.</p>
-        <div class="form-group">
-          <label class="form-label" for="onboard-region-select">Electricity Grid Region</label>
-          <select id="onboard-region-select">
-            <!-- Populated dynamically -->
-          </select>
-        </div>
-        <button class="btn-primary w-full" id="btn-onboard-next-2">Next →</button>
-      </div>
-
-      <div id="onboarding-step-3" class="hidden">
-        <h3>Step 3: Initial Data Sync</h3>
-        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">Let's pull the last 30 days of data from your Gmail (Zomato, Uber, Amazon, etc.) so your dashboard isn't empty.</p>
-        <button class="btn-primary w-full" id="btn-onboard-sync">🔄 Sync Gmail Now</button>
-        <button class="btn-secondary w-full mt-2" id="btn-onboard-skip">Skip for now</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════════════════
-       APP SCREEN
-  ════════════════════════════════════════════════════════ -->
-  <div id="screen-app" class="hidden">
-
-    <!-- Top Nav -->
-    <nav class="topnav" role="navigation" aria-label="Main navigation">
-      <div class="topnav-brand">
-        <span class="topnav-brand-icon" aria-hidden="true"><i data-lucide="leaf"></i></span>
-        <span class="topnav-brand-name">EcoMind</span>
-      </div>
-      <div class="topnav-user">
-        <span id="demo-badge" class="hidden">DEMO</span>
-        <span id="user-name" aria-live="polite"></span>
-        <div class="user-avatar-wrap" aria-hidden="true">
-          <img id="user-avatar" src="" alt="" />
-          <span id="user-initials"></span>
-        </div>
-        <button id="btn-signout" type="button" aria-label="Sign out">Sign out</button>
-      </div>
-    </nav>
-
-    <!-- TOAST -->
-    <div id="toast" class="toast">Action successful</div>
-
-    <!-- API KEY MODAL (BYOK) -->
-    <div id="api-key-modal" class="modal hidden">
-      <div class="modal-content">
-        <h2><i data-lucide="key"></i> API Keys Setup</h2>
-        <p>To use EcoMind, please provide your API keys. They are stored securely in your browser's local storage and are never sent to our servers.</p>
-        <form id="form-api-keys">
-          <div class="form-group">
-            <label for="input-gemini-key">Google Gemini API Key</label>
-            <input type="password" id="input-gemini-key" placeholder="AI Studio Key..." required />
-          </div>
-          <div class="form-group">
-            <label for="input-maps-key">Google Maps API Key (Optional)</label>
-            <input type="password" id="input-maps-key" placeholder="Maps Platform Key..." />
-          </div>
-          <button type="submit" class="btn-primary w-full" aria-label="Save keys">Save & Continue</button>
-          <button type="button" id="btn-demo-mode-modal" class="btn-secondary w-full mt-2" aria-label="Use demo mode">Use Demo Data Mode</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- App Layout -->
-    <div class="app-layout">
-
-      <!-- Sidebar -->
-      <aside class="sidenav" role="navigation" aria-label="Page navigation">
-        <span class="nav-section-label">Main</span>
-        <button class="nav-btn active" data-nav="dashboard" type="button" aria-label="Dashboard">
-          <span class="nav-icon" aria-hidden="true"><i data-lucide="home"></i></span>
-          <span>Dashboard</span>
-        </button>
-        <button class="nav-btn" data-nav="log" type="button" aria-label="Log Activity">
-          <span class="nav-icon" aria-hidden="true"><i data-lucide="pen-tool"></i></span>
-          <span>Log Activity</span>
-        </button>
-        <button class="nav-btn" data-nav="email-sync" type="button" aria-label="Email Sync">
-          <span class="nav-icon" aria-hidden="true"><i data-lucide="mail"></i></span>
-          <span>Email Sync</span>
-        </button>
-        <span class="nav-section-label">AI Tools</span>
-        <button class="nav-btn" data-nav="snap" type="button" aria-label="Snap and Scan">
-          <span class="nav-icon" aria-hidden="true"><i data-lucide="camera"></i></span>
-          <span>Snap &amp; Scan</span>
-        </button>
-        <button class="nav-btn" data-nav="route" type="button" aria-label="Route Carbon">
-          <span class="nav-icon" aria-hidden="true"><i data-lucide="map"></i></span>
-          <span>Route Carbon</span>
-        </button>
-        <button class="nav-btn" data-nav="goals" type="button" aria-label="Goals">
-          <span class="nav-icon" aria-hidden="true"><i data-lucide="target"></i></span>
-          <span>Goals</span>
-        </button>
-        <span class="nav-section-label">Account</span>
-        <button class="nav-btn" data-nav="settings" type="button" aria-label="Settings">
-          <span class="nav-icon" aria-hidden="true"><i data-lucide="settings"></i></span>
-          <span>Settings</span>
-        </button>
-      </aside>
-
-      <!-- Main Content -->
-      <main class="main-content" id="main-content" role="main">
-
-        <!-- ─── DASHBOARD ─── -->
-        <section id="page-dashboard" class="page active" aria-label="Dashboard">
-          <div class="page-header">
-            <h1 class="page-title">Your Carbon Dashboard</h1>
-            <p class="page-subtitle">India-first tracking with AI insights</p>
-          </div>
-
-          <!-- AI Insight Banner -->
-          <div class="insight-card" role="region" aria-label="AI Weekly Insight">
-            <div class="insight-header">
-              <span aria-hidden="true"><i data-lucide="bot"></i></span>
-              <span class="insight-badge">Gemini AI Insight</span>
-            </div>
-            <p id="ai-insight-text">Analyzing your footprint…</p>
-          </div>
-
-          <div style="margin-top:1.25rem"></div>
-
-          <!-- Main Grid -->
-          <div class="dashboard-grid">
-            <!-- Left: Score -->
-            <div class="score-column">
-              <div class="score-card" role="region" aria-label="EcoScore">
-                <div class="score-ring-wrap" aria-hidden="true">
-                  <canvas id="chart-score-ring" width="160" height="160"></canvas>
-                  <div class="score-center">
-                    <span id="eco-score-value" aria-label="EcoScore">—</span>
-                    <span class="score-max">/1000</span>
-                  </div>
-                </div>
-                <span id="eco-score-label" aria-live="polite">—</span>
-                <p style="font-size:0.72rem;color:var(--text-muted);margin-top:0.5rem">
-                  Higher = lower footprint
-                </p>
-              </div>
-
-              <div class="stat-row">
-                <div class="stat-pill" role="status" aria-label="Monthly CO2">
-                  <div class="stat-pill-value" id="monthly-co2">— kg</div>
-                  <div class="stat-pill-label">This Month</div>
-                </div>
-                <div class="stat-pill" role="status" aria-label="Streak days">
-                  <div class="stat-pill-value"><span id="streak-days">0</span> <i data-lucide="flame" style="color:var(--warning); display:inline-block; vertical-align:middle"></i></div>
-                  <div class="stat-pill-label">Day Streak</div>
-                </div>
-              </div>
-
-              <div class="stat-row">
-                <div class="stat-pill" role="status" aria-label="Log entries">
-                  <div class="stat-pill-value" id="entries-count">0</div>
-                  <div class="stat-pill-label">Entries</div>
-                </div>
-                <div class="stat-pill" role="status" aria-label="India rank">
-                  <div class="stat-pill-value">Top 30%</div>
-                  <div class="stat-pill-label">India Rank</div>
-                </div>
-              </div>
-
-              <div class="goal-card-sm" role="region" aria-label="Monthly goal progress">
-                <h4>Monthly CO₂ Goal</h4>
-                <div class="goal-bar-track" aria-hidden="true">
-                  <div class="goal-bar-fill" id="goal-progress-bar" style="width:0%"></div>
-                </div>
-                <p id="goal-progress-text">—</p>
-              </div>
-            </div>
-
-            <!-- Right: Charts -->
-            <div class="charts-column">
-              <!-- Category pills -->
-              <div class="card">
-                <h2 class="card-title"><span aria-hidden="true"><i data-lucide="bar-chart-2"></i></span> Top Categories</h2>
-                <div class="category-pills-wrap" id="category-pills" aria-live="polite"></div>
-              </div>
-
-              <!-- Weekly chart -->
-              <div class="card">
-                <h2 class="card-title"><span aria-hidden="true"><i data-lucide="calendar"></i></span> Last 7 Days</h2>
-                <canvas id="chart-weekly" height="120" aria-label="Weekly carbon trend chart"></canvas>
-              </div>
-
-              <!-- Category breakdown -->
-              <div class="card">
-                <h2 class="card-title"><span aria-hidden="true"><i data-lucide="pie-chart"></i></span> Category Breakdown</h2>
-                <canvas id="chart-category" height="200" aria-label="Carbon by category chart"></canvas>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ─── LOG ACTIVITY ─── -->
-        <section id="page-log" class="page" aria-label="Log Activity">
-          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
-            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
-            <div>
-              <h1 class="page-title">Log Activity</h1>
-              <p class="page-subtitle">Manually add any carbon-emitting activity</p>
-            </div>
-          </div>
-
-          <!-- Tab bar -->
-          <div class="log-tabs" role="tablist" aria-label="Activity type">
-            <button class="log-tab active" data-tab="transport" role="tab" aria-selected="true" id="tab-transport"><i data-lucide="car"></i> Transport</button>
-            <button class="log-tab" data-tab="food" role="tab" aria-selected="false" id="tab-food"><i data-lucide="pizza"></i> Food</button>
-            <button class="log-tab" data-tab="appliance" role="tab" aria-selected="false" id="tab-appliance"><i data-lucide="lightbulb"></i> Home</button>
-            <button class="log-tab" data-tab="digital" role="tab" aria-selected="false" id="tab-digital"><i data-lucide="smartphone"></i> Digital</button>
-            <button class="log-tab" data-tab="flight" role="tab" aria-selected="false" id="tab-flight"><i data-lucide="plane"></i> Flight</button>
-          </div>
-
-          <!-- Transport Panel -->
-          <div class="log-form-panel card active" id="panel-transport" role="tabpanel" aria-labelledby="tab-transport">
-            <h2 class="card-title"><i data-lucide="car"></i> Log a Trip</h2>
-            <form id="form-transport" novalidate>
-              <div class="form-group">
-                <label class="form-label" for="transport-mode">Transport Mode</label>
-                <select id="transport-mode" required aria-required="true">
-                  <optgroup label="Cabs & Cars">
-                    <option value="cab_ola_uber">Cab (Ola / Uber)</option>
-                    <option value="petrol_car_solo">Petrol Car (solo)</option>
-                    <option value="petrol_car_shared">Petrol Car (shared)</option>
-                    <option value="diesel_car_solo">Diesel Car (solo)</option>
-                    <option value="electric_car">Electric Car</option>
-                  </optgroup>
-                  <optgroup label="Two-Wheelers">
-                    <option value="motorcycle_petrol">Motorbike (petrol)</option>
-                    <option value="motorcycle_electric">E-Scooter</option>
-                    <option value="autorickshaw">Auto Rickshaw (CNG)</option>
-                  </optgroup>
-                  <optgroup label="Public Transport">
-                    <option value="metro_rail">Metro / Local Train</option>
-                    <option value="bus_diesel">Bus (diesel)</option>
-                    <option value="bus_electric">Electric Bus</option>
-                    <option value="irctc_train">Indian Railways (IRCTC)</option>
-                    <option value="rapido">Rapido Bike Taxi</option>
-                  </optgroup>
-                  <optgroup label="Zero Carbon">
-                    <option value="walking">Walking</option>
-                    <option value="cycling">Cycling</option>
-                  </optgroup>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="transport-dist">Distance (km)</label>
-                <input type="number" id="transport-dist" min="0.1" step="0.1" placeholder="e.g. 12.5" required aria-required="true" />
-              </div>
-              <button type="submit" class="btn-primary">+ Log Trip</button>
-            </form>
-          </div>
-
-          <!-- Food Panel -->
-          <div class="log-form-panel card" id="panel-food" role="tabpanel" aria-labelledby="tab-food">
-            <h2 class="card-title"><i data-lucide="pizza"></i> Log Food Delivery</h2>
-            <form id="form-food" novalidate>
-              <div class="form-group">
-                <label class="form-label" for="food-type">Meal Type</label>
-                <select id="food-type" required aria-required="true">
-                  <option value="veg_meal">🥗 Vegetarian</option>
-                  <option value="egg_meal">🥚 Egg-based</option>
-                  <option value="chicken_meal">🍗 Chicken</option>
-                  <option value="mutton_meal">🥩 Mutton / Red Meat</option>
-                  <option value="fish_meal">🐟 Fish / Seafood</option>
-                  <option value="paneer_meal">🧀 Paneer (dairy-heavy)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <div class="checkbox-row">
-                  <input type="checkbox" id="food-isqc" />
-                  <label for="food-isqc">Quick commerce order (Blinkit / Zepto / Instamart)</label>
-                </div>
-                <p class="form-hint">Quick commerce adds +0.8 kg CO₂ for cold chain & express logistics</p>
-              </div>
-              <button type="submit" class="btn-primary">+ Log Order</button>
-            </form>
-          </div>
-
-          <!-- Appliance Panel -->
-          <div class="log-form-panel card" id="panel-appliance" role="tabpanel" aria-labelledby="tab-appliance">
-            <h2 class="card-title"><i data-lucide="lightbulb"></i> Log Appliance Usage</h2>
-            <form id="form-appliance" novalidate>
-              <div class="form-group">
-                <label class="form-label" for="appliance-type">Appliance</label>
-                <select id="appliance-type" required aria-required="true">
-                  <optgroup label="Cooling">
-                    <option value="ac_1point5ton">AC 1.5 Ton (BEE 3-star)</option>
-                    <option value="ac_inverter_1point5ton">AC 1.5 Ton (Inverter)</option>
-                    <option value="ac_1ton">AC 1 Ton</option>
-                    <option value="ac_2ton">AC 2 Ton</option>
-                    <option value="ceiling_fan">Ceiling Fan</option>
-                    <option value="table_fan">Table Fan</option>
-                  </optgroup>
-                  <optgroup label="Kitchen">
-                    <option value="microwave">Microwave</option>
-                    <option value="induction_cooktop">Induction Cooktop</option>
-                    <option value="refrigerator_large">Refrigerator (large)</option>
-                    <option value="geyser_3kw">Geyser (3kW)</option>
-                    <option value="washing_machine_per_load">Washing Machine (per load)</option>
-                  </optgroup>
-                  <optgroup label="Electronics">
-                    <option value="tv_led_55inch">TV LED 55"</option>
-                    <option value="tv_led_40inch">TV LED 40"</option>
-                    <option value="laptop">Laptop</option>
-                    <option value="desktop_pc">Desktop PC</option>
-                    <option value="air_purifier">Air Purifier</option>
-                  </optgroup>
-                </select>
-              </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="appliance-hours">Hours/Day</label>
-                  <input type="number" id="appliance-hours" min="0.1" step="0.5" value="4" required aria-required="true" />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="appliance-days">Days</label>
-                  <input type="number" id="appliance-days" min="1" step="1" value="1" required aria-required="true" />
-                </div>
-              </div>
-              <button type="submit" class="btn-primary">+ Log Usage</button>
-            </form>
-          </div>
-
-          <!-- Digital Panel -->
-          <div class="log-form-panel card" id="panel-digital" role="tabpanel" aria-labelledby="tab-digital">
-            <h2 class="card-title"><i data-lucide="smartphone"></i> Log Screen Time / Digital Activity</h2>
-            <form id="form-digital" novalidate>
-              <div class="form-group">
-                <label class="form-label" for="digital-activity">Activity</label>
-                <select id="digital-activity" required aria-required="true">
-                  <option value="streaming_hd">Streaming HD (Netflix / YouTube)</option>
-                  <option value="streaming_4k">Streaming 4K</option>
-                  <option value="streaming_sd">Streaming SD</option>
-                  <option value="video_call_hd">Video Call HD (Zoom / Meet)</option>
-                  <option value="ai_chatbot">AI Chatbot (ChatGPT / Gemini)</option>
-                  <option value="social_media">Social Media Browsing</option>
-                  <option value="gaming_cloud">Cloud Gaming</option>
-                  <option value="gaming_device">On-device Gaming</option>
-                  <option value="music_streaming">Music Streaming</option>
-                  <option value="web_browsing">Web Browsing</option>
-                </select>
-                <p class="form-hint">Server-side carbon per app type — based on published ML carbon research</p>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="digital-hours">Hours</label>
-                <input type="number" id="digital-hours" min="0.1" step="0.5" value="2" required aria-required="true" />
-              </div>
-              <button type="submit" class="btn-primary">+ Log Activity</button>
-            </form>
-          </div>
-
-          <!-- Flight Panel -->
-          <div class="log-form-panel card" id="panel-flight" role="tabpanel" aria-labelledby="tab-flight">
-            <h2 class="card-title"><i data-lucide="plane"></i> Log a Flight</h2>
-            <form id="form-flight" novalidate>
-              <div class="form-group">
-                <label class="form-label" for="flight-distance">Flight Distance (km)</label>
-                <input type="number" id="flight-distance" min="50" step="10" placeholder="e.g. 1150 for DEL–BOM" required aria-required="true" />
-                <p class="form-hint">
-                  Common routes: DEL↔BOM ~1150km · DEL↔BLR ~1740km · BOM↔BLR ~980km · DEL↔DXB ~2200km
-                </p>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="flight-class">Class</label>
-                <select id="flight-class" required aria-required="true">
-                  <option value="economy">Economy</option>
-                  <option value="business">Business</option>
-                  <option value="first">First Class</option>
-                </select>
-              </div>
-              <p class="form-hint" style="margin-bottom:1rem">
-                Includes Radiative Forcing Index (RFI = 1.9) for high-altitude warming effect (DEFRA 2023).
-              </p>
-              <button type="submit" class="btn-primary">+ Log Flight</button>
-            </form>
-          </div>
-
-          <!-- Recent entries -->
-          <h2 class="log-section-title">Recent Entries</h2>
-          <div id="log-entries" aria-live="polite"></div>
-        </section>
-
-        <!-- ─── EMAIL SYNC ─── -->
-        <section id="page-email-sync" class="page" aria-label="Email Sync">
-          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
-            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
-            <div>
-              <h1 class="page-title"><i data-lucide="mail"></i> Email Carbon Sync</h1>
-              <p class="page-subtitle">Auto-detect carbon events from Zomato, Swiggy, IndiGo, Amazon, and more</p>
-            </div>
-          </div>
-
-          <div class="email-sync-header">
-            <div>
-              <p style="font-size:0.85rem;color:var(--text-secondary)">
-                Scans the last 30 days of emails from 25+ services
-              </p>
-            </div>
-            <div style="display:flex;gap:0.75rem;align-items:center">
-              <button class="btn-secondary" id="btn-add-all-emails" style="display:none" aria-label="Add all detected emails">
-                ✓ Add All to Log
-              </button>
-              <button class="btn-primary" id="btn-resync-gmail" style="width:auto;padding:0.65rem 1.25rem" aria-label="Re-sync Gmail">
-                🔄 Sync Gmail
-              </button>
-            </div>
-          </div>
-
-          <div id="email-sync-list" aria-live="polite">
-            <div class="sync-empty">
-              <div class="sync-empty-icon"><i data-lucide="mail"></i></div>
-              <p>Connect Gmail to automatically detect your carbon footprint from food orders, flights, shopping, and electricity bills.</p>
-              <button class="btn-primary" id="btn-sync-gmail" style="max-width:280px;margin:0 auto" type="button">
-                🔄 Sync Gmail Now
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- ─── SNAP & SCAN ─── -->
-        <section id="page-snap" class="page" aria-label="Snap and Scan">
-          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
-            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
-            <div>
-              <h1 class="page-title"><i data-lucide="camera"></i> Snap &amp; Scan</h1>
-              <p class="page-subtitle">Upload a receipt or electricity bill — Gemini AI extracts the carbon data</p>
-            </div>
-          </div>
-
-          <div class="scan-type-row" role="group" aria-label="Scan type">
-            <button class="scan-type-btn active" data-scan-type="receipt" type="button" aria-pressed="true"><i data-lucide="receipt"></i> Shopping Receipt</button>
-            <button class="scan-type-btn" data-scan-type="bill" type="button" aria-pressed="false"><i data-lucide="zap"></i> Electricity Bill</button>
-          </div>
-
-          <div
-            class="scan-dropzone"
-            id="scan-dropzone"
-            role="button"
-            tabindex="0"
-            aria-label="Upload image — click or drag and drop"
-            onkeydown="if(event.key==='Enter'||event.key===' ')document.getElementById('scan-file-input').click()"
-          >
-            <div class="scan-dropzone-icon" aria-hidden="true"><i data-lucide="camera"></i></div>
-            <p>
-              <strong>Click to upload</strong> or drag &amp; drop<br/>
-              <span class="scan-hint" id="scan-hint">Upload your shopping receipt image</span>
-            </p>
-            <p style="font-size:0.72rem;color:var(--text-muted);margin-top:0.5rem">JPG, PNG, WEBP up to 5MB</p>
-          </div>
-          <input type="file" id="scan-file-input" accept="image/*" style="display:none" aria-hidden="true" />
-
-          <div id="scan-loading" class="scan-loading hidden" aria-live="polite">
-            <div class="spinner" role="status" aria-label="Analyzing image"></div>
-            <p>Gemini AI is analyzing your image…</p>
-          </div>
-
-          <div id="scan-result" aria-live="polite"></div>
-        </section>
-
-        <!-- ─── ROUTE CARBON ─── -->
-        <section id="page-route" class="page" aria-label="Route Carbon Calculator">
-          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
-            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
-            <div>
-              <h1 class="page-title"><i data-lucide="map"></i> Route Carbon Calculator</h1>
-              <p class="page-subtitle">See CO₂ comparison across all transport modes for your route</p>
-            </div>
-          </div>
-
-          <div class="card" style="margin-bottom:1rem">
-            <form id="form-route" novalidate>
-              <div class="route-form">
-                <div class="form-group">
-                  <label class="form-label" for="route-origin">From</label>
-                  <input
-                    type="text"
-                    id="route-origin"
-                    placeholder="e.g. Koramangala, Bengaluru"
-                    required
-                    aria-required="true"
-                    autocomplete="off"
-                  />
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="route-dest">To</label>
-                  <input
-                    type="text"
-                    id="route-dest"
-                    placeholder="e.g. Whitefield, Bengaluru"
-                    required
-                    aria-required="true"
-                    autocomplete="off"
-                  />
-                </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="route-mode">Your Transport Mode</label>
-                <select id="route-mode">
-                  <option value="cab_ola_uber">Cab (Ola / Uber)</option>
-                  <option value="metro_rail">Metro / Train</option>
-                  <option value="petrol_car_solo">Petrol Car (solo)</option>
-                  <option value="motorcycle_petrol">Motorbike</option>
-                  <option value="bus_diesel">Bus</option>
-                  <option value="electric_car">Electric Car</option>
-                  <option value="cycling">Cycling</option>
-                  <option value="walking">Walking</option>
-                </select>
-              </div>
-              <button type="submit" class="btn-primary">🔍 Calculate Carbon</button>
-            </form>
-          </div>
-
-          <div id="route-loading" class="route-loading hidden" aria-live="polite">
-            <div class="spinner" role="status" aria-label="Calculating route"></div>
-            <span>Calculating…</span>
-          </div>
-          <div id="route-result" aria-live="polite"></div>
-        </section>
-
-        <!-- ─── GOALS ─── -->
-        <section id="page-goals" class="page" aria-label="Carbon Reduction Goals">
-          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
-            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
-            <div>
-              <h1 class="page-title"><i data-lucide="target"></i> My Carbon Goals</h1>
-              <p class="page-subtitle">Gemini AI suggests goals based on your actual usage patterns</p>
-            </div>
-          </div>
-          <div class="goals-grid" id="goals-list" aria-live="polite">
-            <div class="goals-loading">
-              <div class="spinner" role="status" aria-label="Loading goals"></div>
-              <p>Generating personalized goals…</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ─── SETTINGS ─── -->
-        <section id="page-settings" class="page" aria-label="Settings">
-          <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start;">
-            <button class="btn-back" aria-label="Back to dashboard"><i data-lucide="arrow-left"></i></button>
-            <div>
-              <h1 class="page-title"><i data-lucide="settings"></i> Settings</h1>
-              <p class="page-subtitle">Configure your region, goals, and data preferences</p>
-            </div>
-          </div>
-
-          <div class="settings-section">
-            <h2 class="settings-section-title">My Profile</h2>
-            <div class="settings-card" style="display: flex; align-items: center; gap: 1rem;">
-              <img id="settings-avatar" src="" style="width: 50px; height: 50px; border-radius: 50%; display: none;" />
-              <div>
-                <strong id="settings-name">Name</strong>
-                <div style="font-size: 0.85rem; color: var(--text-secondary);" id="settings-email">email@example.com</div>
-              </div>
-            </div>
-          </div>
-
-          <form id="form-settings" novalidate>
-            <div class="settings-section">
-              <h2 class="settings-section-title">Region &amp; Emissions</h2>
-              <div class="settings-card">
-                <div class="form-group">
-                  <label class="form-label" for="settings-region">Electricity Grid Region</label>
-                  <select id="settings-region" aria-label="Select your electricity grid region">
-                    <!-- Options populated by JS -->
-                  </select>
-                  <p class="form-hint">Affects electricity bill carbon calculation (kg CO₂/kWh)</p>
-                </div>
-                <div class="form-group">
-                  <div class="toggle-row">
-                    <div>
-                      <div class="toggle-label">Global Mode</div>
-                      <div class="toggle-desc">Include global email senders (DoorDash, Amazon.com, etc.)</div>
-                    </div>
-                    <input type="checkbox" id="settings-global-mode" style="width:auto;accent-color:var(--accent)" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="settings-section">
-              <h2 class="settings-section-title">Monthly Target</h2>
-              <div class="settings-card">
-                <div class="form-group">
-                  <label class="form-label" for="settings-goal">Monthly CO₂ Goal (kg)</label>
-                  <input type="number" id="settings-goal" min="10" step="10" value="100" aria-describedby="goal-hint" />
-                  <p class="form-hint" id="goal-hint">
-                    India avg: ~141 kg/month · Paris 1.5°C target: ~83 kg/month
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <button type="submit" class="btn-primary" style="max-width:200px;margin-bottom:1rem">Save Settings</button>
-          </form>
-
-          <div class="settings-section">
-            <h2 class="settings-section-title">Data Management</h2>
-            <div class="settings-card">
-              <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem">
-                All data is stored locally in your browser. Nothing is sent to our servers.
-              </p>
-              <button class="btn-danger" id="btn-clear-data" type="button"><i data-lucide="trash-2"></i> Clear All Carbon Data</button>
-              <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border);">
-                <button class="btn-danger" id="btn-signout-main" type="button" style="width: 100%;">Sign Out</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </main>
-    </div>
-  </div>
-
-  <!-- Toast notification -->
-  <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
-
-  <!-- Config (must load before app scripts) -->
-  <script>
-    // Inline fallback config for demo mode
-    if (!window.ECOMIND_CONFIG) {
-      window.ECOMIND_CONFIG = {
-        GOOGLE_CLIENT_ID: "901720120269-fi19db0s853nvfg698ap0ld9o9i42rmf.apps.googleusercontent.com",
-        GEMINI_API_KEY: "YOUR_GEMINI_API_KEY",
-        MAPS_API_KEY: "YOUR_MAPS_API_KEY",
-        DEMO_MODE: false,
-        APP_VERSION: "1.0.0",
-        FIREBASE_CONFIG: {
-          apiKey: "AIzaSyDgfwfS2OAAsKlzZrQwBwS0jTl6aOY4R2g",
-          authDomain: "climate-intelligence-499106.firebaseapp.com",
-          projectId: "climate-intelligence-499106",
-          storageBucket: "climate-intelligence-499106.firebasestorage.app",
-          messagingSenderId: "901720120269",
-          appId: "1:901720120269:web:3d07d6e6a89c85680c0284",
-          measurementId: "G-W99RLJZYPY"
-        }
-      };
-    }
-  </script>
-  <script src="config.js" onerror="console.info('config.js not found — using demo mode')"></script>
-
-  <!-- App Modules (order matters) -->
-  <script src="js/carbon-engine.js"></script>
-  <script src="js/storage.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/gmail-parser.js"></script>
-  <script src="js/gemini-client.js"></script>
-  <script src="js/maps-carbon.js"></script>
-  <script src="js/charts.js"></script>
-  <script src="js/app.js"></script>
-
-  <!-- Tab switching for Log Activity page -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Log tab switcher
-      document.querySelectorAll('.log-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          document.querySelectorAll('.log-tab').forEach(t => {
-            t.classList.remove('active');
-            t.setAttribute('aria-selected', 'false');
+        if (window._firebaseAnalytics) {
+          logEvent(window._firebaseAnalytics, "exception", {
+            description: event.message,
+            fatal: true,
           });
-          document.querySelectorAll('.log-form-panel').forEach(p => p.classList.remove('active'));
-
-          tab.classList.add('active');
-          tab.setAttribute('aria-selected', 'true');
-          const panel = document.getElementById(`panel-${tab.dataset.tab}`);
-          if (panel) panel.classList.add('active');
-        });
+        }
       });
 
-      // Re-sync button
-      document.getElementById('btn-resync-gmail')?.addEventListener('click', () => {
-        const list = document.getElementById('email-sync-list');
-        if (list) list.innerHTML = `<div class="sync-empty">
+      window.addEventListener("unhandledrejection", (event) => {
+        console.warn("Unhandled Promise Rejection:", event.reason);
+        if (window._firebaseAnalytics) {
+          logEvent(window._firebaseAnalytics, "exception", {
+            description: event.reason?.message || "Promise Rejection",
+            fatal: false,
+          });
+        }
+      });
+
+      // We only init Firebase if the config is provided
+      document.addEventListener("DOMContentLoaded", () => {
+        if (window.ECOMIND_CONFIG?.FIREBASE_CONFIG) {
+          try {
+            const app = initializeApp(window.ECOMIND_CONFIG.FIREBASE_CONFIG);
+            window._firebaseAnalytics = getAnalytics(app);
+            logEvent(window._firebaseAnalytics, "app_open");
+          } catch (e) {
+            console.warn("Firebase init failed:", e);
+          }
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <!-- ═══════════════════════════════════════════════════════
+       AUTH SCREEN
+  ════════════════════════════════════════════════════════ -->
+    <div id="screen-auth">
+      <div class="auth-card">
+        <div class="auth-logo"><i data-lucide="globe"></i></div>
+        <h1 class="auth-title">EcoMind</h1>
+        <p class="auth-subtitle">
+          Your AI carbon intelligence platform.<br />
+          Track your footprint from emails, receipts, and more.
+        </p>
+
+        <div class="auth-features" role="list">
+          <div class="auth-feature" role="listitem">
+            <div class="auth-feature-icon"><i data-lucide="mail"></i></div>
+            <div class="auth-feature-label">Gmail Auto-Detect</div>
+            <div>Zomato, Swiggy, flights, bills</div>
+          </div>
+          <div class="auth-feature" role="listitem">
+            <div class="auth-feature-icon"><i data-lucide="bot"></i></div>
+            <div class="auth-feature-label">Gemini AI</div>
+            <div>Receipt & bill analysis</div>
+          </div>
+          <div class="auth-feature" role="listitem">
+            <div class="auth-feature-icon"><i data-lucide="map"></i></div>
+            <div class="auth-feature-label">Route Carbon</div>
+            <div>Compare transport modes</div>
+          </div>
+          <div class="auth-feature" role="listitem">
+            <div class="auth-feature-icon"><i data-lucide="target"></i></div>
+            <div class="auth-feature-label">AI Goals</div>
+            <div>Personalized reduction plans</div>
+          </div>
+        </div>
+
+        <!-- Google Sign-In -->
+        <button class="btn-google btn-signin" type="button" aria-label="Sign in with Google">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              fill="#4285F4"
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+            />
+          </svg>
+          Sign in with Google
+        </button>
+
+        <!-- Demo Mode -->
+        <button class="btn-demo-mode" id="btn-demo" type="button">
+          <i data-lucide="search"></i> Try Demo Mode (no sign-in needed)
+        </button>
+
+        <p class="auth-disclaimer">
+          Gmail access is read-only. Your data stays on your device.<br />
+          We never store or share your emails.
+        </p>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+       ONBOARDING SCREEN
+  ════════════════════════════════════════════════════════ -->
+    <div id="screen-onboarding" class="hidden">
+      <div class="auth-card" style="max-width: 500px; text-align: left">
+        <h1 class="auth-title" style="text-align: center; margin-bottom: 0.5rem">
+          Welcome to EcoMind
+        </h1>
+        <p class="auth-subtitle" style="text-align: center; margin-bottom: 2rem">
+          Let's get your baseline set up.
+        </p>
+
+        <div id="onboarding-step-1">
+          <h3>Step 1: Setup Gemini AI</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem">
+            EcoMind uses Gemini to analyze your receipts and electricity bills securely in your
+            browser.
+          </p>
+          <div class="form-group">
+            <label class="form-label">Google Gemini API Key (Required)</label>
+            <input type="password" id="onboard-gemini-key" placeholder="AI Studio Key..." />
+          </div>
+          <button class="btn-primary w-full" id="btn-onboard-next-1">Next →</button>
+        </div>
+
+        <div id="onboarding-step-2" class="hidden">
+          <h3>Step 2: Electricity Grid Baseline</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem">
+            Where do you live? We need this to calculate accurate CO₂ from your home energy and
+            appliance usage.
+          </p>
+          <div class="form-group">
+            <label class="form-label" for="onboard-region-select">Electricity Grid Region</label>
+            <select id="onboard-region-select">
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+          <button class="btn-primary w-full" id="btn-onboard-next-2">Next →</button>
+        </div>
+
+        <div id="onboarding-step-3" class="hidden">
+          <h3>Step 3: Initial Data Sync</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem">
+            Let's pull the last 30 days of data from your Gmail (Zomato, Uber, Amazon, etc.) so your
+            dashboard isn't empty.
+          </p>
+          <button class="btn-primary w-full" id="btn-onboard-sync">🔄 Sync Gmail Now</button>
+          <button class="btn-secondary w-full mt-2" id="btn-onboard-skip">Skip for now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════
+       APP SCREEN
+  ════════════════════════════════════════════════════════ -->
+    <div id="screen-app" class="hidden">
+      <!-- Top Nav -->
+      <nav class="topnav" role="navigation" aria-label="Main navigation">
+        <div class="topnav-brand">
+          <span class="topnav-brand-icon" aria-hidden="true"><i data-lucide="leaf"></i></span>
+          <span class="topnav-brand-name">EcoMind</span>
+        </div>
+        <div class="topnav-user">
+          <span id="demo-badge" class="hidden">DEMO</span>
+          <span id="user-name" aria-live="polite"></span>
+          <div class="user-avatar-wrap" aria-hidden="true">
+            <img id="user-avatar" src="" alt="" />
+            <span id="user-initials"></span>
+          </div>
+          <button id="btn-signout" type="button" aria-label="Sign out">Sign out</button>
+        </div>
+      </nav>
+
+      <!-- TOAST -->
+      <div id="toast" class="toast">Action successful</div>
+
+      <!-- API KEY MODAL (BYOK) -->
+      <div id="api-key-modal" class="modal hidden">
+        <div class="modal-content">
+          <h2><i data-lucide="key"></i> API Keys Setup</h2>
+          <p>
+            To use EcoMind, please provide your API keys. They are stored securely in your browser's
+            local storage and are never sent to our servers.
+          </p>
+          <form id="form-api-keys">
+            <div class="form-group">
+              <label for="input-gemini-key">Google Gemini API Key</label>
+              <input
+                type="password"
+                id="input-gemini-key"
+                placeholder="AI Studio Key..."
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="input-maps-key">Google Maps API Key (Optional)</label>
+              <input type="password" id="input-maps-key" placeholder="Maps Platform Key..." />
+            </div>
+            <button type="submit" class="btn-primary w-full" aria-label="Save keys">
+              Save & Continue
+            </button>
+            <button
+              type="button"
+              id="btn-demo-mode-modal"
+              class="btn-secondary w-full mt-2"
+              aria-label="Use demo mode"
+            >
+              Use Demo Data Mode
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- App Layout -->
+      <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidenav" role="navigation" aria-label="Page navigation">
+          <span class="nav-section-label">Main</span>
+          <button class="nav-btn active" data-nav="dashboard" type="button" aria-label="Dashboard">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="home"></i></span>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav-btn" data-nav="log" type="button" aria-label="Log Activity">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="pen-tool"></i></span>
+            <span>Log Activity</span>
+          </button>
+          <button class="nav-btn" data-nav="email-sync" type="button" aria-label="Email Sync">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="mail"></i></span>
+            <span>Email Sync</span>
+          </button>
+          <span class="nav-section-label">AI Tools</span>
+          <button class="nav-btn" data-nav="snap" type="button" aria-label="Snap and Scan">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="camera"></i></span>
+            <span>Snap &amp; Scan</span>
+          </button>
+          <button class="nav-btn" data-nav="route" type="button" aria-label="Route Carbon">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="map"></i></span>
+            <span>Route Carbon</span>
+          </button>
+          <button class="nav-btn" data-nav="goals" type="button" aria-label="Goals">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="target"></i></span>
+            <span>Goals</span>
+          </button>
+          <span class="nav-section-label">Account</span>
+          <button class="nav-btn" data-nav="settings" type="button" aria-label="Settings">
+            <span class="nav-icon" aria-hidden="true"><i data-lucide="settings"></i></span>
+            <span>Settings</span>
+          </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" id="main-content" role="main">
+          <!-- ─── DASHBOARD ─── -->
+          <section id="page-dashboard" class="page active" aria-label="Dashboard">
+            <div class="page-header">
+              <h1 class="page-title">Your Carbon Dashboard</h1>
+              <p class="page-subtitle">India-first tracking with AI insights</p>
+            </div>
+
+            <!-- AI Insight Banner -->
+            <div class="insight-card" role="region" aria-label="AI Weekly Insight">
+              <div class="insight-header">
+                <span aria-hidden="true"><i data-lucide="bot"></i></span>
+                <span class="insight-badge">Gemini AI Insight</span>
+              </div>
+              <p id="ai-insight-text">Analyzing your footprint…</p>
+            </div>
+
+            <div style="margin-top: 1.25rem"></div>
+
+            <!-- Main Grid -->
+            <div class="dashboard-grid">
+              <!-- Left: Score -->
+              <div class="score-column">
+                <div class="score-card" role="region" aria-label="EcoScore">
+                  <div class="score-ring-wrap" aria-hidden="true">
+                    <canvas id="chart-score-ring" width="160" height="160"></canvas>
+                    <div class="score-center">
+                      <span id="eco-score-value" aria-label="EcoScore">—</span>
+                      <span class="score-max">/1000</span>
+                    </div>
+                  </div>
+                  <span id="eco-score-label" aria-live="polite">—</span>
+                  <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.5rem">
+                    Higher = lower footprint
+                  </p>
+                </div>
+
+                <div class="stat-row">
+                  <div class="stat-pill" role="status" aria-label="Monthly CO2">
+                    <div class="stat-pill-value" id="monthly-co2">— kg</div>
+                    <div class="stat-pill-label">This Month</div>
+                  </div>
+                  <div class="stat-pill" role="status" aria-label="Streak days">
+                    <div class="stat-pill-value">
+                      <span id="streak-days">0</span>
+                      <i
+                        data-lucide="flame"
+                        style="color: var(--warning); display: inline-block; vertical-align: middle"
+                      ></i>
+                    </div>
+                    <div class="stat-pill-label">Day Streak</div>
+                  </div>
+                </div>
+
+                <div class="stat-row">
+                  <div class="stat-pill" role="status" aria-label="Log entries">
+                    <div class="stat-pill-value" id="entries-count">0</div>
+                    <div class="stat-pill-label">Entries</div>
+                  </div>
+                  <div class="stat-pill" role="status" aria-label="India rank">
+                    <div class="stat-pill-value">Top 30%</div>
+                    <div class="stat-pill-label">India Rank</div>
+                  </div>
+                </div>
+
+                <div class="goal-card-sm" role="region" aria-label="Monthly goal progress">
+                  <h4>Monthly CO₂ Goal</h4>
+                  <div class="goal-bar-track" aria-hidden="true">
+                    <div class="goal-bar-fill" id="goal-progress-bar" style="width: 0%"></div>
+                  </div>
+                  <p id="goal-progress-text">—</p>
+                </div>
+              </div>
+
+              <!-- Right: Charts -->
+              <div class="charts-column">
+                <!-- Category pills -->
+                <div class="card">
+                  <h2 class="card-title">
+                    <span aria-hidden="true"><i data-lucide="bar-chart-2"></i></span> Top Categories
+                  </h2>
+                  <div class="category-pills-wrap" id="category-pills" aria-live="polite"></div>
+                </div>
+
+                <!-- Weekly chart -->
+                <div class="card">
+                  <h2 class="card-title">
+                    <span aria-hidden="true"><i data-lucide="calendar"></i></span> Last 7 Days
+                  </h2>
+                  <canvas
+                    id="chart-weekly"
+                    height="120"
+                    aria-label="Weekly carbon trend chart"
+                  ></canvas>
+                </div>
+
+                <!-- Category breakdown -->
+                <div class="card">
+                  <h2 class="card-title">
+                    <span aria-hidden="true"><i data-lucide="pie-chart"></i></span> Category
+                    Breakdown
+                  </h2>
+                  <canvas
+                    id="chart-category"
+                    height="200"
+                    aria-label="Carbon by category chart"
+                  ></canvas>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ─── LOG ACTIVITY ─── -->
+          <section id="page-log" class="page" aria-label="Log Activity">
+            <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start">
+              <button class="btn-back" aria-label="Back to dashboard">
+                <i data-lucide="arrow-left"></i>
+              </button>
+              <div>
+                <h1 class="page-title">Log Activity</h1>
+                <p class="page-subtitle">Manually add any carbon-emitting activity</p>
+              </div>
+            </div>
+
+            <!-- Tab bar -->
+            <div class="log-tabs" role="tablist" aria-label="Activity type">
+              <button
+                class="log-tab active"
+                data-tab="transport"
+                role="tab"
+                aria-selected="true"
+                id="tab-transport"
+              >
+                <i data-lucide="car"></i> Transport
+              </button>
+              <button
+                class="log-tab"
+                data-tab="food"
+                role="tab"
+                aria-selected="false"
+                id="tab-food"
+              >
+                <i data-lucide="pizza"></i> Food
+              </button>
+              <button
+                class="log-tab"
+                data-tab="appliance"
+                role="tab"
+                aria-selected="false"
+                id="tab-appliance"
+              >
+                <i data-lucide="lightbulb"></i> Home
+              </button>
+              <button
+                class="log-tab"
+                data-tab="digital"
+                role="tab"
+                aria-selected="false"
+                id="tab-digital"
+              >
+                <i data-lucide="smartphone"></i> Digital
+              </button>
+              <button
+                class="log-tab"
+                data-tab="flight"
+                role="tab"
+                aria-selected="false"
+                id="tab-flight"
+              >
+                <i data-lucide="plane"></i> Flight
+              </button>
+            </div>
+
+            <!-- Transport Panel -->
+            <div
+              class="log-form-panel card active"
+              id="panel-transport"
+              role="tabpanel"
+              aria-labelledby="tab-transport"
+            >
+              <h2 class="card-title"><i data-lucide="car"></i> Log a Trip</h2>
+              <form id="form-transport" novalidate>
+                <div class="form-group">
+                  <label class="form-label" for="transport-mode">Transport Mode</label>
+                  <select id="transport-mode" required aria-required="true">
+                    <optgroup label="Cabs & Cars">
+                      <option value="cab_ola_uber">Cab (Ola / Uber)</option>
+                      <option value="petrol_car_solo">Petrol Car (solo)</option>
+                      <option value="petrol_car_shared">Petrol Car (shared)</option>
+                      <option value="diesel_car_solo">Diesel Car (solo)</option>
+                      <option value="electric_car">Electric Car</option>
+                    </optgroup>
+                    <optgroup label="Two-Wheelers">
+                      <option value="motorcycle_petrol">Motorbike (petrol)</option>
+                      <option value="motorcycle_electric">E-Scooter</option>
+                      <option value="autorickshaw">Auto Rickshaw (CNG)</option>
+                    </optgroup>
+                    <optgroup label="Public Transport">
+                      <option value="metro_rail">Metro / Local Train</option>
+                      <option value="bus_diesel">Bus (diesel)</option>
+                      <option value="bus_electric">Electric Bus</option>
+                      <option value="irctc_train">Indian Railways (IRCTC)</option>
+                      <option value="rapido">Rapido Bike Taxi</option>
+                    </optgroup>
+                    <optgroup label="Zero Carbon">
+                      <option value="walking">Walking</option>
+                      <option value="cycling">Cycling</option>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="transport-dist">Distance (km)</label>
+                  <input
+                    type="number"
+                    id="transport-dist"
+                    min="0.1"
+                    step="0.1"
+                    placeholder="e.g. 12.5"
+                    required
+                    aria-required="true"
+                  />
+                </div>
+                <button type="submit" class="btn-primary">+ Log Trip</button>
+              </form>
+            </div>
+
+            <!-- Food Panel -->
+            <div
+              class="log-form-panel card"
+              id="panel-food"
+              role="tabpanel"
+              aria-labelledby="tab-food"
+            >
+              <h2 class="card-title"><i data-lucide="pizza"></i> Log Food Delivery</h2>
+              <form id="form-food" novalidate>
+                <div class="form-group">
+                  <label class="form-label" for="food-type">Meal Type</label>
+                  <select id="food-type" required aria-required="true">
+                    <option value="veg_meal">🥗 Vegetarian</option>
+                    <option value="egg_meal">🥚 Egg-based</option>
+                    <option value="chicken_meal">🍗 Chicken</option>
+                    <option value="mutton_meal">🥩 Mutton / Red Meat</option>
+                    <option value="fish_meal">🐟 Fish / Seafood</option>
+                    <option value="paneer_meal">🧀 Paneer (dairy-heavy)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <div class="checkbox-row">
+                    <input type="checkbox" id="food-isqc" />
+                    <label for="food-isqc"
+                      >Quick commerce order (Blinkit / Zepto / Instamart)</label
+                    >
+                  </div>
+                  <p class="form-hint">
+                    Quick commerce adds +0.8 kg CO₂ for cold chain & express logistics
+                  </p>
+                </div>
+                <button type="submit" class="btn-primary">+ Log Order</button>
+              </form>
+            </div>
+
+            <!-- Appliance Panel -->
+            <div
+              class="log-form-panel card"
+              id="panel-appliance"
+              role="tabpanel"
+              aria-labelledby="tab-appliance"
+            >
+              <h2 class="card-title"><i data-lucide="lightbulb"></i> Log Appliance Usage</h2>
+              <form id="form-appliance" novalidate>
+                <div class="form-group">
+                  <label class="form-label" for="appliance-type">Appliance</label>
+                  <select id="appliance-type" required aria-required="true">
+                    <optgroup label="Cooling">
+                      <option value="ac_1point5ton">AC 1.5 Ton (BEE 3-star)</option>
+                      <option value="ac_inverter_1point5ton">AC 1.5 Ton (Inverter)</option>
+                      <option value="ac_1ton">AC 1 Ton</option>
+                      <option value="ac_2ton">AC 2 Ton</option>
+                      <option value="ceiling_fan">Ceiling Fan</option>
+                      <option value="table_fan">Table Fan</option>
+                    </optgroup>
+                    <optgroup label="Kitchen">
+                      <option value="microwave">Microwave</option>
+                      <option value="induction_cooktop">Induction Cooktop</option>
+                      <option value="refrigerator_large">Refrigerator (large)</option>
+                      <option value="geyser_3kw">Geyser (3kW)</option>
+                      <option value="washing_machine_per_load">Washing Machine (per load)</option>
+                    </optgroup>
+                    <optgroup label="Electronics">
+                      <option value="tv_led_55inch">TV LED 55"</option>
+                      <option value="tv_led_40inch">TV LED 40"</option>
+                      <option value="laptop">Laptop</option>
+                      <option value="desktop_pc">Desktop PC</option>
+                      <option value="air_purifier">Air Purifier</option>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="appliance-hours">Hours/Day</label>
+                    <input
+                      type="number"
+                      id="appliance-hours"
+                      min="0.1"
+                      step="0.5"
+                      value="4"
+                      required
+                      aria-required="true"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="appliance-days">Days</label>
+                    <input
+                      type="number"
+                      id="appliance-days"
+                      min="1"
+                      step="1"
+                      value="1"
+                      required
+                      aria-required="true"
+                    />
+                  </div>
+                </div>
+                <button type="submit" class="btn-primary">+ Log Usage</button>
+              </form>
+            </div>
+
+            <!-- Digital Panel -->
+            <div
+              class="log-form-panel card"
+              id="panel-digital"
+              role="tabpanel"
+              aria-labelledby="tab-digital"
+            >
+              <h2 class="card-title">
+                <i data-lucide="smartphone"></i> Log Screen Time / Digital Activity
+              </h2>
+              <form id="form-digital" novalidate>
+                <div class="form-group">
+                  <label class="form-label" for="digital-activity">Activity</label>
+                  <select id="digital-activity" required aria-required="true">
+                    <option value="streaming_hd">Streaming HD (Netflix / YouTube)</option>
+                    <option value="streaming_4k">Streaming 4K</option>
+                    <option value="streaming_sd">Streaming SD</option>
+                    <option value="video_call_hd">Video Call HD (Zoom / Meet)</option>
+                    <option value="ai_chatbot">AI Chatbot (ChatGPT / Gemini)</option>
+                    <option value="social_media">Social Media Browsing</option>
+                    <option value="gaming_cloud">Cloud Gaming</option>
+                    <option value="gaming_device">On-device Gaming</option>
+                    <option value="music_streaming">Music Streaming</option>
+                    <option value="web_browsing">Web Browsing</option>
+                  </select>
+                  <p class="form-hint">
+                    Server-side carbon per app type — based on published ML carbon research
+                  </p>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="digital-hours">Hours</label>
+                  <input
+                    type="number"
+                    id="digital-hours"
+                    min="0.1"
+                    step="0.5"
+                    value="2"
+                    required
+                    aria-required="true"
+                  />
+                </div>
+                <button type="submit" class="btn-primary">+ Log Activity</button>
+              </form>
+            </div>
+
+            <!-- Flight Panel -->
+            <div
+              class="log-form-panel card"
+              id="panel-flight"
+              role="tabpanel"
+              aria-labelledby="tab-flight"
+            >
+              <h2 class="card-title"><i data-lucide="plane"></i> Log a Flight</h2>
+              <form id="form-flight" novalidate>
+                <div class="form-group">
+                  <label class="form-label" for="flight-distance">Flight Distance (km)</label>
+                  <input
+                    type="number"
+                    id="flight-distance"
+                    min="50"
+                    step="10"
+                    placeholder="e.g. 1150 for DEL–BOM"
+                    required
+                    aria-required="true"
+                  />
+                  <p class="form-hint">
+                    Common routes: DEL↔BOM ~1150km · DEL↔BLR ~1740km · BOM↔BLR ~980km · DEL↔DXB
+                    ~2200km
+                  </p>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="flight-class">Class</label>
+                  <select id="flight-class" required aria-required="true">
+                    <option value="economy">Economy</option>
+                    <option value="business">Business</option>
+                    <option value="first">First Class</option>
+                  </select>
+                </div>
+                <p class="form-hint" style="margin-bottom: 1rem">
+                  Includes Radiative Forcing Index (RFI = 1.9) for high-altitude warming effect
+                  (DEFRA 2023).
+                </p>
+                <button type="submit" class="btn-primary">+ Log Flight</button>
+              </form>
+            </div>
+
+            <!-- Recent entries -->
+            <h2 class="log-section-title">Recent Entries</h2>
+            <div id="log-entries" aria-live="polite"></div>
+          </section>
+
+          <!-- ─── EMAIL SYNC ─── -->
+          <section id="page-email-sync" class="page" aria-label="Email Sync">
+            <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start">
+              <button class="btn-back" aria-label="Back to dashboard">
+                <i data-lucide="arrow-left"></i>
+              </button>
+              <div>
+                <h1 class="page-title"><i data-lucide="mail"></i> Email Carbon Sync</h1>
+                <p class="page-subtitle">
+                  Auto-detect carbon events from Zomato, Swiggy, IndiGo, Amazon, and more
+                </p>
+              </div>
+            </div>
+
+            <div class="email-sync-header">
+              <div>
+                <p style="font-size: 0.85rem; color: var(--text-secondary)">
+                  Scans the last 30 days of emails from 25+ services
+                </p>
+              </div>
+              <div style="display: flex; gap: 0.75rem; align-items: center">
+                <button
+                  class="btn-secondary"
+                  id="btn-add-all-emails"
+                  style="display: none"
+                  aria-label="Add all detected emails"
+                >
+                  ✓ Add All to Log
+                </button>
+                <button
+                  class="btn-primary"
+                  id="btn-resync-gmail"
+                  style="width: auto; padding: 0.65rem 1.25rem"
+                  aria-label="Re-sync Gmail"
+                >
+                  🔄 Sync Gmail
+                </button>
+              </div>
+            </div>
+
+            <div id="email-sync-list" aria-live="polite">
+              <div class="sync-empty">
+                <div class="sync-empty-icon"><i data-lucide="mail"></i></div>
+                <p>
+                  Connect Gmail to automatically detect your carbon footprint from food orders,
+                  flights, shopping, and electricity bills.
+                </p>
+                <button
+                  class="btn-primary"
+                  id="btn-sync-gmail"
+                  style="max-width: 280px; margin: 0 auto"
+                  type="button"
+                >
+                  🔄 Sync Gmail Now
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ─── SNAP & SCAN ─── -->
+          <section id="page-snap" class="page" aria-label="Snap and Scan">
+            <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start">
+              <button class="btn-back" aria-label="Back to dashboard">
+                <i data-lucide="arrow-left"></i>
+              </button>
+              <div>
+                <h1 class="page-title"><i data-lucide="camera"></i> Snap &amp; Scan</h1>
+                <p class="page-subtitle">
+                  Upload a receipt or electricity bill — Gemini AI extracts the carbon data
+                </p>
+              </div>
+            </div>
+
+            <div class="scan-type-row" role="group" aria-label="Scan type">
+              <button
+                class="scan-type-btn active"
+                data-scan-type="receipt"
+                type="button"
+                aria-pressed="true"
+              >
+                <i data-lucide="receipt"></i> Shopping Receipt
+              </button>
+              <button
+                class="scan-type-btn"
+                data-scan-type="bill"
+                type="button"
+                aria-pressed="false"
+              >
+                <i data-lucide="zap"></i> Electricity Bill
+              </button>
+            </div>
+
+            <div
+              class="scan-dropzone"
+              id="scan-dropzone"
+              role="button"
+              tabindex="0"
+              aria-label="Upload image — click or drag and drop"
+              onkeydown="
+                if (event.key === 'Enter' || event.key === ' ')
+                  document.getElementById('scan-file-input').click();
+              "
+            >
+              <div class="scan-dropzone-icon" aria-hidden="true"><i data-lucide="camera"></i></div>
+              <p>
+                <strong>Click to upload</strong> or drag &amp; drop<br />
+                <span class="scan-hint" id="scan-hint">Upload your shopping receipt image</span>
+              </p>
+              <p style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.5rem">
+                JPG, PNG, WEBP up to 5MB
+              </p>
+            </div>
+            <input
+              type="file"
+              id="scan-file-input"
+              accept="image/*"
+              style="display: none"
+              aria-hidden="true"
+            />
+
+            <div id="scan-loading" class="scan-loading hidden" aria-live="polite">
+              <div class="spinner" role="status" aria-label="Analyzing image"></div>
+              <p>Gemini AI is analyzing your image…</p>
+            </div>
+
+            <div id="scan-result" aria-live="polite"></div>
+          </section>
+
+          <!-- ─── ROUTE CARBON ─── -->
+          <section id="page-route" class="page" aria-label="Route Carbon Calculator">
+            <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start">
+              <button class="btn-back" aria-label="Back to dashboard">
+                <i data-lucide="arrow-left"></i>
+              </button>
+              <div>
+                <h1 class="page-title"><i data-lucide="map"></i> Route Carbon Calculator</h1>
+                <p class="page-subtitle">
+                  See CO₂ comparison across all transport modes for your route
+                </p>
+              </div>
+            </div>
+
+            <div class="card" style="margin-bottom: 1rem">
+              <form id="form-route" novalidate>
+                <div class="route-form">
+                  <div class="form-group">
+                    <label class="form-label" for="route-origin">From</label>
+                    <input
+                      type="text"
+                      id="route-origin"
+                      placeholder="e.g. Koramangala, Bengaluru"
+                      required
+                      aria-required="true"
+                      autocomplete="off"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="route-dest">To</label>
+                    <input
+                      type="text"
+                      id="route-dest"
+                      placeholder="e.g. Whitefield, Bengaluru"
+                      required
+                      aria-required="true"
+                      autocomplete="off"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="route-mode">Your Transport Mode</label>
+                  <select id="route-mode">
+                    <option value="cab_ola_uber">Cab (Ola / Uber)</option>
+                    <option value="metro_rail">Metro / Train</option>
+                    <option value="petrol_car_solo">Petrol Car (solo)</option>
+                    <option value="motorcycle_petrol">Motorbike</option>
+                    <option value="bus_diesel">Bus</option>
+                    <option value="electric_car">Electric Car</option>
+                    <option value="cycling">Cycling</option>
+                    <option value="walking">Walking</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn-primary">🔍 Calculate Carbon</button>
+              </form>
+            </div>
+
+            <div id="route-loading" class="route-loading hidden" aria-live="polite">
+              <div class="spinner" role="status" aria-label="Calculating route"></div>
+              <span>Calculating…</span>
+            </div>
+            <div id="route-result" aria-live="polite"></div>
+          </section>
+
+          <!-- ─── GOALS ─── -->
+          <section id="page-goals" class="page" aria-label="Carbon Reduction Goals">
+            <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start">
+              <button class="btn-back" aria-label="Back to dashboard">
+                <i data-lucide="arrow-left"></i>
+              </button>
+              <div>
+                <h1 class="page-title"><i data-lucide="target"></i> My Carbon Goals</h1>
+                <p class="page-subtitle">
+                  Gemini AI suggests goals based on your actual usage patterns
+                </p>
+              </div>
+            </div>
+            <div class="goals-grid" id="goals-list" aria-live="polite">
+              <div class="goals-loading">
+                <div class="spinner" role="status" aria-label="Loading goals"></div>
+                <p>Generating personalized goals…</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ─── SETTINGS ─── -->
+          <section id="page-settings" class="page" aria-label="Settings">
+            <div class="page-header" style="display: flex; gap: 1rem; align-items: flex-start">
+              <button class="btn-back" aria-label="Back to dashboard">
+                <i data-lucide="arrow-left"></i>
+              </button>
+              <div>
+                <h1 class="page-title"><i data-lucide="settings"></i> Settings</h1>
+                <p class="page-subtitle">Configure your region, goals, and data preferences</p>
+              </div>
+            </div>
+
+            <div class="settings-section">
+              <h2 class="settings-section-title">My Profile</h2>
+              <div class="settings-card" style="display: flex; align-items: center; gap: 1rem">
+                <img
+                  id="settings-avatar"
+                  src=""
+                  style="width: 50px; height: 50px; border-radius: 50%; display: none"
+                />
+                <div>
+                  <strong id="settings-name">Name</strong>
+                  <div style="font-size: 0.85rem; color: var(--text-secondary)" id="settings-email">
+                    email@example.com
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <form id="form-settings" novalidate>
+              <div class="settings-section">
+                <h2 class="settings-section-title">Region &amp; Emissions</h2>
+                <div class="settings-card">
+                  <div class="form-group">
+                    <label class="form-label" for="settings-region">Electricity Grid Region</label>
+                    <select id="settings-region" aria-label="Select your electricity grid region">
+                      <!-- Options populated by JS -->
+                    </select>
+                    <p class="form-hint">
+                      Affects electricity bill carbon calculation (kg CO₂/kWh)
+                    </p>
+                  </div>
+                  <div class="form-group">
+                    <div class="toggle-row">
+                      <div>
+                        <div class="toggle-label">Global Mode</div>
+                        <div class="toggle-desc">
+                          Include global email senders (DoorDash, Amazon.com, etc.)
+                        </div>
+                      </div>
+                      <input
+                        type="checkbox"
+                        id="settings-global-mode"
+                        style="width: auto; accent-color: var(--accent)"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section">
+                <h2 class="settings-section-title">Monthly Target</h2>
+                <div class="settings-card">
+                  <div class="form-group">
+                    <label class="form-label" for="settings-goal">Monthly CO₂ Goal (kg)</label>
+                    <input
+                      type="number"
+                      id="settings-goal"
+                      min="10"
+                      step="10"
+                      value="100"
+                      aria-describedby="goal-hint"
+                    />
+                    <p class="form-hint" id="goal-hint">
+                      India avg: ~141 kg/month · Paris 1.5°C target: ~83 kg/month
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="btn-primary"
+                style="max-width: 200px; margin-bottom: 1rem"
+              >
+                Save Settings
+              </button>
+            </form>
+
+            <div class="settings-section">
+              <h2 class="settings-section-title">Data Management</h2>
+              <div class="settings-card">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem">
+                  All data is stored locally in your browser. Nothing is sent to our servers.
+                </p>
+                <button class="btn-danger" id="btn-clear-data" type="button">
+                  <i data-lucide="trash-2"></i> Clear All Carbon Data
+                </button>
+                <div
+                  style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border)"
+                >
+                  <button
+                    class="btn-danger"
+                    id="btn-signout-main"
+                    type="button"
+                    style="width: 100%"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Config (must load before app scripts) -->
+    <script>
+      // Inline fallback config for demo mode
+      if (!window.ECOMIND_CONFIG) {
+        window.ECOMIND_CONFIG = {
+          GOOGLE_CLIENT_ID:
+            "901720120269-fi19db0s853nvfg698ap0ld9o9i42rmf.apps.googleusercontent.com",
+          GEMINI_API_KEY: "YOUR_GEMINI_API_KEY",
+          MAPS_API_KEY: "YOUR_MAPS_API_KEY",
+          DEMO_MODE: false,
+          APP_VERSION: "1.0.0",
+          FIREBASE_CONFIG: {
+            apiKey: "AIzaSyDgfwfS2OAAsKlzZrQwBwS0jTl6aOY4R2g",
+            authDomain: "climate-intelligence-499106.firebaseapp.com",
+            projectId: "climate-intelligence-499106",
+            storageBucket: "climate-intelligence-499106.firebasestorage.app",
+            messagingSenderId: "901720120269",
+            appId: "1:901720120269:web:3d07d6e6a89c85680c0284",
+            measurementId: "G-W99RLJZYPY",
+          },
+        };
+      }
+    </script>
+    <script
+      src="config.js"
+      onerror="console.info('config.js not found — using demo mode')"
+    ></script>
+
+    <!-- App Modules (order matters) -->
+    <script src="js/carbon-engine.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/gmail-parser.js"></script>
+    <script src="js/gemini-client.js"></script>
+    <script src="js/maps-carbon.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Tab switching for Log Activity page -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Log tab switcher
+        document.querySelectorAll(".log-tab").forEach((tab) => {
+          tab.addEventListener("click", () => {
+            document.querySelectorAll(".log-tab").forEach((t) => {
+              t.classList.remove("active");
+              t.setAttribute("aria-selected", "false");
+            });
+            document
+              .querySelectorAll(".log-form-panel")
+              .forEach((p) => p.classList.remove("active"));
+
+            tab.classList.add("active");
+            tab.setAttribute("aria-selected", "true");
+            const panel = document.getElementById(`panel-${tab.dataset.tab}`);
+            if (panel) panel.classList.add("active");
+          });
+        });
+
+        // Re-sync button
+        document.getElementById("btn-resync-gmail")?.addEventListener("click", () => {
+          const list = document.getElementById("email-sync-list");
+          if (list)
+            list.innerHTML = `<div class="sync-empty">
           <div class="sync-empty-icon"><i data-lucide="mail"></i></div>
           <p>Click below to re-scan your Gmail inbox.</p>
           <button class="btn-primary" id="btn-sync-gmail" style="max-width:280px;margin:0 auto">🔄 Sync Gmail Now</button>
         </div>`;
-        document.getElementById('btn-sync-gmail')?.addEventListener('click', () => {
-          window._doGmailSync && window._doGmailSync();
+          document.getElementById("btn-sync-gmail")?.addEventListener("click", () => {
+            window._doGmailSync && window._doGmailSync();
+          });
         });
       });
-    });
-  </script>
-
-</body>
+    </script>
+  </body>
 </html>

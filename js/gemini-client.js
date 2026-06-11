@@ -300,7 +300,7 @@ If high electricity, suggest AC temperature changes. Keep it practical for India
     return tips[category] || tips.food_delivery;
   }
 
-  function _demoGoals(profile) {
+  function _demoGoals(_profile) {
     return [
       {
         title: "Metro Over Cab 3x/Week",
@@ -328,5 +328,10 @@ If high electricity, suggest AC temperature changes. Keep it practical for India
 
   return { analyzeReceipt, analyzeElectricityBill, generateWeeklyInsight, generateGoals };
 })();
-
-window.GeminiClient = GeminiClient;
+// Make available globally
+if (typeof window !== "undefined") {
+  window.GeminiClient = GeminiClient;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = GeminiClient;
+}
