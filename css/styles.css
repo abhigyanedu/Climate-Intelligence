@@ -724,6 +724,63 @@ input:focus, select:focus {
   transform: translateX(-50%) translateY(0);
 }
 
+/* ─── MODALS ─── */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 54, 45, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+.modal:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+}
+.modal-content {
+  background: var(--surface-solid);
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 20px 40px rgba(26, 54, 45, 0.1);
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+}
+.modal:not(.hidden) .modal-content {
+  transform: translateY(0);
+}
+.modal-content h2 {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.modal-content p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* ─── ICONS ─── */
+.lucide {
+  width: 1.2em;
+  height: 1.2em;
+  stroke-width: 2;
+  vertical-align: text-bottom;
+}
+
 /* ─── DESKTOP TWEAKS ─── */
 @media (min-width: 768px) {
   .app-layout {

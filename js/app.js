@@ -61,6 +61,53 @@ const App = (() => {
 
     // Update streak
     Storage.updateStreak();
+
+    // Check API Keys (BYOK logic)
+    _checkApiKeys();
+  }
+
+  function _checkApiKeys() {
+    const geminiKey = localStorage.getItem('gemini_api_key');
+    const mapsKey = localStorage.getItem('maps_api_key');
+    
+    if (geminiKey && window.ECOMIND_CONFIG) {
+      window.ECOMIND_CONFIG.GEMINI_API_KEY = geminiKey;
+      window.ECOMIND_CONFIG.MAPS_API_KEY = mapsKey;
+      window.ECOMIND_CONFIG.DEMO_MODE = false;
+    }
+    
+    if (!geminiKey && !window.ECOMIND_CONFIG?.DEMO_MODE) {
+      document.getElementById('api-key-modal')?.classList.remove('hidden');
+    }
+
+    // Wire up the API Keys form
+    document.getElementById('form-api-keys')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const gemini = document.getElementById('input-gemini-key').value;
+      const maps = document.getElementById('input-maps-key').value;
+      
+      if (gemini) localStorage.setItem('gemini_api_key', gemini);
+      if (maps) localStorage.setItem('maps_api_key', maps);
+      
+      document.getElementById('api-key-modal')?.classList.add('hidden');
+      _showToast('API Keys saved securely to browser.');
+      
+      // Update config object in memory so current session uses them
+      if (window.ECOMIND_CONFIG) {
+        window.ECOMIND_CONFIG.GEMINI_API_KEY = gemini;
+        window.ECOMIND_CONFIG.MAPS_API_KEY = maps;
+        window.ECOMIND_CONFIG.DEMO_MODE = false;
+      }
+    });
+
+    // Wire up demo mode button in modal
+    document.getElementById('btn-demo-mode-modal')?.addEventListener('click', () => {
+      document.getElementById('api-key-modal')?.classList.add('hidden');
+      if (window.ECOMIND_CONFIG) {
+        window.ECOMIND_CONFIG.DEMO_MODE = true;
+      }
+      _showToast('Demo Mode activated.');
+    });
   }
 
   function _onSignIn(user) {
@@ -95,6 +142,11 @@ const App = (() => {
       case "route": _renderRoute(); break;
       case "log": _renderLog(); break;
       case "goals": _renderGoals(); break;
+    }
+
+    // Refresh icons after render
+    if (window.lucide) {
+      setTimeout(() => lucide.createIcons(), 50);
     }
   }
 
@@ -244,7 +296,7 @@ const App = (() => {
 
       list.innerHTML = results.map((r) => `
         <div class="email-item" data-id="${r.id}" data-co2="${r.estimatedCo2 || 0}" data-category="${r.category}">
-          <div class="email-icon">${r.categoryIcon}</div>
+          <div class="email-icon"><i data-lucide="${r.categoryIcon}"></i></div>
           <div class="email-body">
             <div class="email-platform">${r.platform}</div>
             <div class="email-subject">${r.subject}</div>
@@ -259,7 +311,7 @@ const App = (() => {
             co2: r.estimatedCo2 || 0,
             date: r.date,
             details: { subject: r.subject, platform: r.platform }
-          })}' aria-label="Add ${r.platform} entry">+</button>
+          })}' aria-label="Add ${r.platform} entry"><i data-lucide="plus"></i></button>
         </div>
       `).join("");
 
@@ -317,13 +369,13 @@ const App = (() => {
       const icon = _getCategoryIcon(e.category);
       return `
         <div class="log-entry">
-          <div class="log-entry-icon" style="background:${color}22; color:${color}">${icon}</div>
+          <div class="log-entry-icon" style="background:${color}22; color:${color}"><i data-lucide="${icon}"></i></div>
           <div class="log-entry-body">
             <div class="log-entry-source">${e.source}</div>
             <div class="log-entry-date">${e.date}</div>
           </div>
           <div class="log-entry-co2" style="color:${color}">${e.co2.toFixed(2)} kg</div>
-          <button class="btn-delete-entry" data-id="${e.id}" aria-label="Delete entry">🗑</button>
+          <button class="btn-delete-entry" data-id="${e.id}" aria-label="Delete entry"><i data-lucide="trash-2"></i></button>
         </div>`;
     }).join("");
 
@@ -733,11 +785,11 @@ const App = (() => {
 
   function _getCategoryIcon(category) {
     const icons = {
-      transport_cab: "🚕", transport_train: "🚂", food_delivery: "🍔",
-      quick_commerce: "⚡", ecommerce: "📦", electricity: "💡",
-      flight: "✈️", accommodation: "🏨", digital: "📱", manual: "✏️", travel: "🗺️",
+      transport_cab: "car", transport_train: "train", food_delivery: "pizza",
+      quick_commerce: "zap", ecommerce: "package", electricity: "lightbulb",
+      flight: "plane", accommodation: "hotel", digital: "smartphone", manual: "pen-tool", travel: "map",
     };
-    return icons[category] || "📊";
+    return icons[category] || "bar-chart-2";
   }
 
   function _seedDemoDataIfNeeded() {
