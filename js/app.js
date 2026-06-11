@@ -826,10 +826,16 @@ const App = (() => {
   }
 
   function _seedDemoDataIfNeeded() {
-    const existing = Storage.getEntries();
-    if (existing.length > 0) return;
+    const log = Storage.getEntries();
+    if (!log.length) {
+      const isDemo = window.ECOMIND_CONFIG?.DEMO_MODE || Auth.getUser()?.isDemoUser;
+      if (isDemo) {
+        _injectDemoData();
+      }
+    }
+  }
 
-    // Seed 14 days of realistic data
+  function _injectDemoData() {
     const seed = [
       { category: "food_delivery", source: "Gmail - Zomato", co2: 5.5, daysAgo: 0 },
       { category: "transport_cab", source: "Gmail - Uber", co2: 3.2, daysAgo: 0 },

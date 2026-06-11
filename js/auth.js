@@ -83,7 +83,7 @@ const Auth = (() => {
     }
     _accessToken = null;
     _userProfile = null;
-    Storage.clear("auth");
+    Storage.clear();
     window.dispatchEvent(new CustomEvent("ecomind:signout"));
   }
 
