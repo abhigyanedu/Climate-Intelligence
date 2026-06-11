@@ -209,4 +209,11 @@ const Storage = (() => {
   };
 })();
 
-window.Storage = Storage;
+// Make available globally
+if (typeof window !== 'undefined') {
+  window.Storage = Storage;
+}
+// Export for CommonJS (Jest Testing)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = Storage;
+}

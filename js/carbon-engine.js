@@ -678,4 +678,10 @@ const CarbonEngine = (() => {
 })();
 
 // Make available globally
-window.CarbonEngine = CarbonEngine;
+if (typeof window !== 'undefined') {
+  window.CarbonEngine = CarbonEngine;
+}
+// Export for CommonJS (Jest Testing)
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = CarbonEngine;
+}
